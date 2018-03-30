@@ -1,0 +1,32 @@
+{
+    "appenders": {
+        "access": {
+            "type": "dateFile",
+            "filename": "log/access.log",
+            "pattern": "-yyyy-MM-dd",
+            "category": "http"
+        },
+        "main": {
+            "type": "file",
+            "filename": "log/app.log",
+            "pattern": "-yyyy-MM-dd"
+        },
+        "out": {
+            "type": "stdout"
+        }
+    },
+    "categories": {
+        "default": {
+            "appenders": [
+                "main","out"
+            ],
+            "level": "debug"
+        },
+        "http": {
+            "appenders": [
+                "access","out"
+            ],
+            "level": "debug"
+        }
+    }
+}
