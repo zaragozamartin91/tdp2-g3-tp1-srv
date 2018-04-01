@@ -69,14 +69,18 @@ function query(sql, values, callback) {
  * Ejecuta una query como una promesa. Este tipo de query retorna filas en vez de objeto res.
  * @param {string} sql Query en sql usando placeholders (ej: SELECT FROM USER WHERE ID=$1).
  * @param {Array} values Valores a reemplazar en los placeholders.
+ * @param {Function} mapf Funcion mapeadora de valores de resultado
  * @return {Promise} Promesa de ejecucion de query.
  */
 /* istanbul ignore next */
-function queryPromise(sql, values) {
+function queryPromise(sql, values , mapf) {
     return new Promise((resolve, reject) => {
         query(sql, values, (err, { rows }) => {
             if (err) reject(err);
-            else resolve(rows);
+            else {
+                if(mapf) resolve(rows.map(mapf));
+                else resolve(rows);
+            }
         });
     });
 }

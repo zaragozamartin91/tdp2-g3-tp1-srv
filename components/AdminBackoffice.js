@@ -8,12 +8,12 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import axios from 'axios';
 
 import AdminBackofficeBar from './AdminBackofficeBar';
-import Index from './Index';
-import Login from './Login';
-import Users from './Users';
+import AdminIndex from './AdminIndex';
+import AdminLogin from './AdminLogin';
+import ShopList from './ShopList';
 import Servers from './Servers';
 import ServerCreator from './ServerCreator';
-import CreateUserForm from './CreateUserForm';
+import ShopForm from './ShopForm';
 import Rules from './Rules';
 import RuleCreator from './RuleCreator';
 
@@ -48,14 +48,8 @@ const AdminBackoffice = React.createClass({
     setToken: function (token) {
         token = token.token || token;
         console.log('Seteando token: ' + token);
-        axios.get(`/api/v1/business-users/me?token=${token}`)
-            .then(contents => {
-                console.log(contents.data.businessUser);
-                this.setState({ token, user: contents.data.businessUser, renderReady: true });
-            })
-            .catch(cause => {
-                console.error(cause);
-            });
+        this.setState({ token,  renderReady: true });
+        
     },
 
     render: function () {
@@ -64,14 +58,12 @@ const AdminBackoffice = React.createClass({
         //if (!this.state.renderReady) return (<span>Espere...</span>);
 
         const token = this.state.token;
-        if (!token) return <Login onSubmit={this.setToken} />;
-
-        const user = this.state.user;
+        if (!token) return <AdminLogin onSubmit={this.setToken} />;
 
         console.log('window.location.hash: ' + window.location.hash);
         if (window.location.hash == '#/') {
             console.log('REPLACING LOCATION');
-            window.location.replace('/main#/index');
+            window.location.replace('/admin#/index');
             //return <span>Redireccionando...</span>;
         }
 
@@ -81,19 +73,17 @@ const AdminBackoffice = React.createClass({
                 <div>
                     <AdminBackofficeBar onLogout={() => this.logoutForm.submit()} />
 
-                    <Route path="/users/list" component={() => <Users token={token} />} />
-                    <Route path="/users/create" component={() => <CreateUserForm token={token} />} />
+                    <Route path="/index" component={AdminIndex} />
+
+                    <Route path="/shops/list" component={() => <ShopList token={token} />} />
+                    <Route path="/shops/create" component={() => <ShopForm token={token} />} />
                     
                     <Route path="/servers/list" component={() => <Servers token={token} />} />
-                    <Route path="/servers/create" component={() => <ServerCreator token={token} user={user} />} />
-                    
-                    <Route path="/index" component={Index} />
 
-                    <Route path="/rules/list" component={() => <Rules token={token} user={user} />} />
                     <Route path="/rules/create" component={() => <RuleCreator token={token} />} />
 
                     <form
-                        action='/logout'
+                        action='/admin/logout'
                         method='POST'
                         ref={f => this.logoutForm = f}
                         style={{ display: 'hidden' }}>

@@ -12,7 +12,18 @@ const rulesController = require('../controllers/rules-controller');
 
 const hitsController = require('../controllers/hits-controller');
 
+//NUEVOS CONTROLADORES ------------------------------------------------
+const adminController = require('../controllers/admin-controller');
+const shopController = require('../controllers/shop-controller');
+
 const router = express.Router();
+
+router.post('/admin/login', adminController.login);
+
+//TODO : AGREGAR SEGURIDAD A NIVEL TOKEN
+router.get('/shops', shopController.getShops);
+
+//VIEJAS API DEL PROYECTO DE TALLER2 ---------------------------------------
 
 /** Api para obtener y reproducir el audio de una cancion */
 router.get('/test', function (req, res) {
@@ -24,7 +35,7 @@ router.get('/test', function (req, res) {
 });
 
 router.post('/token', tokenController.generateToken);
-router.get('/token/:serverId',tokenValidator.verifyToken, tokenValidator.verifyAnyRoleToken, tokenController.getServerToken );
+router.get('/token/:serverId', tokenValidator.verifyToken, tokenValidator.verifyAnyRoleToken, tokenController.getServerToken);
 
 /* servers ROUTES -------------------------------------------------------------------------------------------------------------- */
 router.post('/servers/ping', serverController.renewToken);
