@@ -1,10 +1,30 @@
 const dbManager = require('./db-manager');
 
 const table = 'shops';
+const idType = 'SERIAL'
 
-function Shop(id , name) {
+function Shop(id , name, address, phone) {
     this.id = id;
     this.name = name;
+    this.address = address;
+    this.phone = phone
+}
+
+Shop.createTable = function () {
+    const sql = `CREATE TABLE ${table} (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(64),
+        address VARCHAR(64),
+        phone VARCHAR(32)
+    )`;
+    return dbManager.queryPromise(sql,[]);
+}
+
+Shop.insert = function(json) {
+    const {name, address, phone} = json;
+    const sql = `INSERT INTO ${table}(name, address, phone) VALUES($1,$2,$3) RETURNING *`;
+    const values = [name, address, phone];
+    return dbManager.queryPromise(sql, values, fromRows);
 }
 
 /**
@@ -12,8 +32,8 @@ function Shop(id , name) {
  * @param {object} json Objeto a partir del cual crear el shop 
  */
 function fromJson(json) {
-    const {id , name} = json;
-    return new Shop(id, name);
+    const {id , name, address, phone} = json;
+    return new Shop(id, name, address, phone);
 }
 
 function fromRows(rows) {
@@ -27,8 +47,7 @@ Shop.findById = function(shop) {
     nota: esto vale si y solo si el operando de la izquierda no es "falsy" por efecto colateral */
     const id = shop.id || shop;
     const sql = `SELECT * FROM ${table} WHERE id=$1`;
-    //return dbManager.queryPromise(sql , [id] , fromRows);
-    return null
+    return dbManager.queryPromise(sql , [id] , fromRows);
 };
 
 // EJEMPLO de llamada a findById
