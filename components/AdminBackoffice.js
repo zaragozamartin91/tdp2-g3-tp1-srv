@@ -10,10 +10,10 @@ import axios from 'axios';
 import AdminBackofficeBar from './AdminBackofficeBar';
 import AdminIndex from './AdminIndex';
 import AdminLogin from './AdminLogin';
-import Users from './Users';
+import ShopList from './ShopList';
 import Servers from './Servers';
 import ServerCreator from './ServerCreator';
-import CreateUserForm from './CreateUserForm';
+import ShopForm from './ShopForm';
 import Rules from './Rules';
 import RuleCreator from './RuleCreator';
 
@@ -75,8 +75,8 @@ const AdminBackoffice = React.createClass({
 
                     <Route path="/index" component={AdminIndex} />
 
-                    <Route path="/users/list" component={() => <Users token={token} />} />
-                    <Route path="/users/create" component={() => <CreateUserForm token={token} />} />
+                    <Route path="/shops/list" component={() => <ShopList token={token} />} />
+                    <Route path="/shops/create" component={() => <ShopForm token={token} />} />
                     
                     <Route path="/servers/list" component={() => <Servers token={token} />} />
 
