@@ -83,7 +83,7 @@ const AdminBackoffice = React.createClass({
                     <Route path="/rules/create" component={() => <RuleCreator token={token} />} />
 
                     <form
-                        action='/logout'
+                        action='/admin/logout'
                         method='POST'
                         ref={f => this.logoutForm = f}
                         style={{ display: 'hidden' }}>
