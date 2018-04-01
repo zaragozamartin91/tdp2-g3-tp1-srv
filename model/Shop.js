@@ -23,11 +23,17 @@ Shop.createTable = function () {
 }
 
 Shop.insert = function(json) {
-    const {name, address, phon, zone} = json;
+    const {name, address, phone, zone} = json;
     const sql = `INSERT INTO ${table}(name, address, phone, zone) VALUES($1,$2,$3,$4) RETURNING *`;
     const values = [name, address, phone, zone];
     return dbManager.queryPromise(sql, values, fromRows);
 }
+
+Shop.deleteById = function(shop) {
+    const id = shop.id || shop;
+    const sql = `DELETE FROM ${table} WHERE id=$1 RETURNING *`;
+    return dbManager.queryPromise(sql, [id], fromRows);
+};
 
 /**
  * Crea un Shop a partir de un OBJETO (no strin) json
