@@ -3,11 +3,12 @@ const dbManager = require('./db-manager');
 const table = 'shops';
 const idType = 'SERIAL'
 
-function Shop(id , name, address, phone) {
+function Shop(id , name, address, zone, phone) {
     this.id = id;
     this.name = name;
     this.address = address;
     this.phone = phone
+    this.zone = zone;
 }
 
 Shop.createTable = function () {
@@ -15,15 +16,16 @@ Shop.createTable = function () {
         id SERIAL PRIMARY KEY,
         name VARCHAR(64),
         address VARCHAR(64),
-        phone VARCHAR(32)
+        phone VARCHAR(32),
+        zone VARCHAR(64)
     )`;
     return dbManager.queryPromise(sql,[]);
 }
 
 Shop.insert = function(json) {
-    const {name, address, phone} = json;
-    const sql = `INSERT INTO ${table}(name, address, phone) VALUES($1,$2,$3) RETURNING *`;
-    const values = [name, address, phone];
+    const {name, address, phon, zone} = json;
+    const sql = `INSERT INTO ${table}(name, address, phone, zone) VALUES($1,$2,$3,$4) RETURNING *`;
+    const values = [name, address, phone, zone];
     return dbManager.queryPromise(sql, values, fromRows);
 }
 
@@ -32,8 +34,8 @@ Shop.insert = function(json) {
  * @param {object} json Objeto a partir del cual crear el shop 
  */
 function fromJson(json) {
-    const {id , name, address, phone} = json;
-    return new Shop(id, name, address, phone);
+    const {id , name, address, phone, zone} = json;
+    return new Shop(id, name, address, phone, zone);
 }
 
 function fromRows(rows) {
