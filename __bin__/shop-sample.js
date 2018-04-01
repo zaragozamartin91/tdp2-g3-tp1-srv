@@ -8,6 +8,17 @@ Shop.insert({name: "mercadoArg", address: "Falsa 345", phone: "111111111", zone:
     .then( ([shop]) => {
         console.log(`shop ${shop.id} creado`);
         console.log(shop);
+        return Shop.findEverything();
+    })
+    .then( (allShops) => {
+        console.log(allShops);
+    })
+
+/*
+Shop.insert({name: "mercadoArg", address: "Falsa 345", phone: "111111111", zone: "Palermo"})
+    .then( ([shop]) => {
+        console.log(`shop ${shop.id} creado`);
+        console.log(shop);
         return Shop.deleteById(shop.id);
     })
     .then( ([shop]) => {

@@ -58,6 +58,15 @@ Shop.findById = function(shop) {
     return dbManager.queryPromise(sql , [id] , fromRows);
 };
 
+Shop.findEverything = function() {
+    /* esta expresion determina que si shop tiene un atributo id (xq es un objeto) 
+    entonces asigna a la variable id el valor de dicho atributo.
+    Caso contrario, interpreto a shop como un numero y lo asigno a id.
+    nota: esto vale si y solo si el operando de la izquierda no es "falsy" por efecto colateral */
+    const sql = `SELECT * FROM ${table}`;
+    return dbManager.queryPromise(sql , [] , fromRows);
+};
+
 // EJEMPLO de llamada a findById
 //Shop.findById(123)
 //    .then(shops => {
