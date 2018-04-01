@@ -3,7 +3,18 @@ const dbManager = require("../model/db-manager");
 
 //Shop.createTable();
 
+Shop.insert({name: "mercadoArg", address: "Falsa 345", phone: "111111111", zone: "Palermo"})
+    .then( ([shop]) => {
+        //console.log(`shop ${shop.id} creado`);
+        //console.log(shop);
+        shop.phone = "333333333";
+        return Shop.update(shop);
+    })
+    .then( ([shop2]) => {
+        console.log(shop2);
+    })
 
+    /*
 Shop.insert({name: "mercadoArg", address: "Falsa 345", phone: "111111111", zone: "Palermo"})
     .then( ([shop]) => {
         console.log(`shop ${shop.id} creado`);

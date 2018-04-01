@@ -29,6 +29,13 @@ Shop.insert = function(json) {
     return dbManager.queryPromise(sql, values, fromRows);
 }
 
+Shop.update = function (json) {
+    const {id, name, address, phone, zone} = json;
+    const sql = `UPDATE ${table} SET name=$1, address=$2, phone=$3, zone=$4 WHERE id=$5 RETURNING *`;
+    const values = [name, address, phone, zone, id];
+    return dbManager.queryPromise(sql, values, fromRows);
+};
+
 Shop.deleteById = function(shop) {
     const id = shop.id || shop;
     const sql = `DELETE FROM ${table} WHERE id=$1 RETURNING *`;
