@@ -11,9 +11,9 @@ router.get('/admin', (req, res) => {
     res.render('adminbackoffice', { title: 'HOY COMO' });
 });
 
-router.post('/logout', (req, res) => {
+router.post('/admin/logout', (req, res) => {
     res.clearCookie('token');
-    res.redirect(config.mainPath);
+    res.redirect('/admin');
 });
 
 module.exports = router;
