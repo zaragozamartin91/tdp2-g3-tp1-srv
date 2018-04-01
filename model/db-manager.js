@@ -78,7 +78,7 @@ function queryPromise(sql, values , mapf) {
         query(sql, values, (err, { rows }) => {
             if (err) reject(err);
             else {
-                if(mapf) resolve(rows.map(mapf));
+                if(mapf) resolve(mapf(rows));
                 else resolve(rows);
             }
         });
