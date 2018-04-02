@@ -5,7 +5,7 @@ const logger = require('log4js').getLogger('test-data-controller');
 
 const Shop = require('../model/Shop');
 
-createTables = function () {
+function createTables() {
     return Shop.createTable().then(() => {
         console.log("Se creo la tabla de Shops");
         return true;
@@ -14,14 +14,15 @@ createTables = function () {
 
 exports.createTestData = function (req, res) {
     createTables().then(b => {
-        res.send({msg: "exito"});
-    }).catch( cause => {
+        res.send({ msg: "exito" });
+    }).catch(cause => {
         console.log("Hubo un problema al crear las tablas");
-        responseUtils.sendMsgCodeResponse(res , "Hubo un problema al crear las tablas", 500);
+        responseUtils.sendMsgCodeResponse(res, "Hubo un problema al crear las tablas", 500);
     })
 };
 
-deleteTables = function () {
+
+function deleteTables() {
     return Shop.deleteTable().then(() => {
         console.log("Se elimino la tabla de Shops");
         return true;
@@ -30,9 +31,9 @@ deleteTables = function () {
 
 exports.deleteTestData = function (req, res) {
     deleteTables().then(b => {
-        res.send({msg: "exito"});
-    }).catch( cause => {
+        res.send({ msg: "exito" });
+    }).catch(cause => {
         console.log("Hubo un problema al eliminar las tablas");
-        responseUtils.sendMsgCodeResponse(res , "Hubo un problema al eliminar las tablas", 500);
+        responseUtils.sendMsgCodeResponse(res, "Hubo un problema al eliminar las tablas", 500);
     })
 };
