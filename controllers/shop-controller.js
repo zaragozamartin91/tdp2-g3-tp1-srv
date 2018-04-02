@@ -12,7 +12,7 @@ exports.getShops = function (req, res) {
 
 exports.createShop = function(req , res) {
     const shopJson = req.body;
-    Shop.insert(shopJson)
+    return Shop.insert(shopJson)
         .then( ([shop]) => {
             res.send({ shop });
         })

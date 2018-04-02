@@ -64,6 +64,8 @@ function fromRows(rows) {
     return rows.map(fromJson);
 }
 
+Shop.fromRows = fromRows;
+
 Shop.findById = function (shop) {
     /* esta expresion determina que si shop tiene un atributo id (xq es un objeto) 
     entonces asigna a la variable id el valor de dicho atributo.
