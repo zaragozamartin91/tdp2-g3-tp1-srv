@@ -3,7 +3,7 @@ const dbManager = require('./db-manager');
 const table = 'shops';
 const idType = 'SERIAL'
 
-function Shop(id, name, address, zone, phone, enabled) {
+function Shop(id, name, address, phone, zone, enabled) {
     this.id = id;
     this.name = name;
     this.address = address;
@@ -15,17 +15,23 @@ function Shop(id, name, address, zone, phone, enabled) {
 Shop.createTable = function () {
     const sql = `CREATE TABLE ${table} (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(64),
-        address VARCHAR(64),
-        phone VARCHAR(32),
-        zone VARCHAR(64),
+        name VARCHAR(64) NOT NULL,
+        address VARCHAR(64) NOT NULL,
+        phone VARCHAR(32) NOT NULL,
+        zone VARCHAR(64) NOT NULL,
         enabled BOOLEAN DEFAULT TRUE
     )`;
     return dbManager.queryPromise(sql, []);
 }
 
+Shop.deleteTable = function () {
+    const sql = `DROP TABLE  ${table}`;
+    return dbManager.queryPromise(sql, []);
+}
+
 Shop.insert = function (json) {
     const { name, address, phone, zone } = json;
+
     const sql = `INSERT INTO ${table}(name, address, phone, zone) VALUES($1,$2,$3,$4) RETURNING *`;
     const values = [name, address, phone, zone];
     return dbManager.queryPromise(sql, values, fromRows);

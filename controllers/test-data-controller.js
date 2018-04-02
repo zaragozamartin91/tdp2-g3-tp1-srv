@@ -21,6 +21,18 @@ exports.createTestData = function (req, res) {
     })
 };
 
+deleteTables = function () {
+    return Shop.deleteTable().then(() => {
+        console.log("Se elimino la tabla de Shops");
+        return true;
+    })
+}
+
 exports.deleteTestData = function (req, res) {
-    console.log("Por el momento no se eliminan las tablas");
+    deleteTables().then(b => {
+        res.send({msg: "exito"});
+    }).catch( cause => {
+        console.log("Hubo un problema al eliminar las tablas");
+        responseUtils.sendMsgCodeResponse(res , "Hubo un problema al eliminar las tablas", 500);
+    })
 };
