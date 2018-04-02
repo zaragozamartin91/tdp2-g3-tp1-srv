@@ -6,10 +6,14 @@ const apiVersion = mainConf.apiVersion;
  * @param {Response} res Objeto respuesta http.
  * @param {string} message Mensaje a enviar.
  * @param {number} code Codigo de error.
+ * @param {object} headers Encabezados a agregar en la respuesta
  */
-function sendMsgCodeResponse(res, message, code) {
+function sendMsgCodeResponse(res, message, code, headers = {}) {
     code = code || 200;
     res.status(code);
+    for (let headerId in headers) {
+        res.setHeader(headerId, headers[headerId]);
+    }
     res.send({ code, message });
 }
 

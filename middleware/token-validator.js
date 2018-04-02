@@ -12,6 +12,8 @@ const sendMsgCodeResponse = responseUtils.sendMsgCodeResponse;
 
 const getToken = requestTokenGetter.getToken;
 
+const BEARER_AUTH_HEADER = { 'WWW-Authenticate': 'Bearer realm="example"' };
+
 /**
  * Middleware que verifica la validez de un token api.
  * Este middleware debe setearse para interceptar las requests de los 
@@ -21,7 +23,10 @@ const getToken = requestTokenGetter.getToken;
 exports.verifyToken = function (req, res, next) {
     logger.debug('Verificando token de query');
     const token = getToken(req);
-    if (!token) return sendMsgCodeResponse(res, 'Token no enviado', 400);
+    if (!token) {
+        const headers = BEARER_AUTH_HEADER;
+        return sendMsgCodeResponse(res, 'Token no enviado', 401, headers);
+    }
 
     tokenManager.verifyToken(token, (err, decoded) => {
         if (err) return sendMsgCodeResponse(res, 'No autorizado', 401);
