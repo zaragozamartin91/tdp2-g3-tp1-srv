@@ -22,6 +22,9 @@ router.post('/admin/login', adminController.login);
 
 //TODO : AGREGAR SEGURIDAD A NIVEL TOKEN
 router.get('/shops', shopController.getShops);
+router.post('/shops', shopController.createShop);
+//router.delete('/shops/:shopId', shopController.deleteShop);
+
 
 //VIEJAS API DEL PROYECTO DE TALLER2 ---------------------------------------
 
