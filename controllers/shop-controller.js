@@ -17,7 +17,7 @@ exports.createShop = function(req , res) {
             res.send({ shop });
         })
         .catch(cause => {
-            console.error("Hubo un problema al crear el Shop: " + JSON.stringify(shopJson));
-            responseUtils.sendMsgCodeResponse(res , "Hubo un problema al crear el Shop: " + JSON.stringify(shopJson) , 500);
+            console.error("Hubo un problema al crear el Shop: " + JSON.stringify(shopJson) + ", " + cause);
+            responseUtils.sendMsgCodeResponse(res , "Hubo un problema al crear el Shop: " + JSON.stringify(shopJson) + ", " + cause , 500);
         })
 };
