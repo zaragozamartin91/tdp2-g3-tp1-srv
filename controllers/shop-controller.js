@@ -12,6 +12,17 @@ exports.getShops = function (req, res) {
         })
 };
 
+exports.getShopsEnabled = function (req, res) {
+    return Shop.findEnabled()
+        .then( (shops) => {
+            res.send({ shops });
+        })
+        .catch(cause => {
+            console.error("Hubo un problema al obtener los Shops habilitados, " + cause);
+            responseUtils.sendMsgCodeResponse(res , "Hubo un problema al obtener los Shops habilitados, " + cause , 500);
+        })
+};
+
 exports.createShop = function(req , res) {
     const shopJson = req.body;
     return Shop.insert(shopJson)

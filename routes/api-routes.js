@@ -13,8 +13,10 @@ const router = express.Router();
 router.post('/admin/login', adminController.login);
 
 //TODO : AGREGAR SEGURIDAD A NIVEL TOKEN
+
 router.get('/shops', tokenValidator.verifyToken, tokenValidator.verifyAdminToken, shopController.getShops);
 router.post('/shops', tokenValidator.verifyToken, tokenValidator.verifyAdminToken, shopController.createShop);
+router.get('/shops/enabled', shopController.getShopsEnabled);
 //router.delete('/shops/:shopId', shopController.deleteShop);
 
 module.exports = router;

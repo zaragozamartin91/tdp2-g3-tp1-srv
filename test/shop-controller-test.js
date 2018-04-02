@@ -29,7 +29,7 @@ const createShopReq1 = {
 
 
 /* mock respuesta de gets */
-const getShops = Shop.fromRows([
+const shops = Shop.fromRows([
     {
         "id": 3,
         "name": "Pizzeria la mas rica 2",
@@ -49,7 +49,7 @@ const getShops = Shop.fromRows([
 ]);
 
 /* mock de request de shopController#createShop */
-const getShopsReq = {
+const shopsReq = {
     body: {
         shops: [
             {
@@ -72,9 +72,51 @@ const getShopsReq = {
     }
 };
 
-const getShopsEmpty = Shop.fromRows([]);
+const shopsEnabled = Shop.fromRows([
+    {
+        "id": 3,
+        "name": "Pizzeria la mas rica 2",
+        "address": "Calle falsa 909",
+        "phone": "Caballito",
+        "zone": "1212121233",
+        "enabled": true
+    },
+    {
+        "id": 4,
+        "name": "Pizzeria la mas rica",
+        "address": "Calle falsa 1009",
+        "phone": "Palermo",
+        "zone": "1333444455",
+        "enabled": true
+    }
+]);
 
-const getShopsEmptyReq = {
+const shopsEnabledReq = {
+    body: {
+        shops: [
+            {
+                "id": 3,
+                "name": "Pizzeria la mas rica 2",
+                "address": "Calle falsa 909",
+                "phone": "Caballito",
+                "zone": "1212121233",
+                "enabled": true
+            },
+            {
+                "id": 4,
+                "name": "Pizzeria la mas rica",
+                "address": "Calle falsa 1009",
+                "phone": "Palermo",
+                "zone": "1333444455",
+                "enabled": false
+            }
+        ]
+    }
+};
+
+const shopsEmpty = Shop.fromRows([]);
+
+const shopsEmptyReq = {
     body: {
         shops: []
     }
@@ -132,7 +174,7 @@ describe('shop-controller', function () {
              Shop falle con una promesa fallida */
             sandbox.stub(Shop, 'find').rejects();
 
-            const req = getShopsReq;
+            const req = shopsReq;
             /* Creamos una response mock que verifique el codigo de error 500 */
             const res = testUtils.mockErrRes(500);
 
@@ -146,18 +188,18 @@ describe('shop-controller', function () {
 
         it('Obtener el listado de shops en la BBDD', function (done) {
             /* Hacemos que el get de Shop sea exitoso y que devuelva
-            el arreglo 'getShops' */
-            sandbox.stub(Shop, 'find').resolves(getShops);
+            el arreglo 'shops' */
+            sandbox.stub(Shop, 'find').resolves(shops);
             
             /* creamos un response mock con un metodo 'send' que verifique
             que la respuesta enviada contenga un campo 'shop' que coincida con
             el primer elemento del arreglo de la respuesta del 'insert' */
             const res = {
                 send(json) {
-                    assert.equal(json.shops , getShops);
+                    assert.equal(json.shops , shops);
                 }
             }
-            shopController.getShops(getShopsReq , res)
+            shopController.getShops(shopsReq , res)
                 .then(done)
                 .catch(done);
         });
@@ -165,17 +207,72 @@ describe('shop-controller', function () {
         it('Obtener el listado de shops en la BBDD cuando no hay shops', function (done) {
             /* Hacemos que el get de Shop sea exitoso y que devuelva
             el arreglo 'getShops' */
-            sandbox.stub(Shop, 'find').resolves(getShopsEmpty);
+            sandbox.stub(Shop, 'find').resolves(shopsEmpty);
             
             /* creamos un response mock con un metodo 'send' que verifique
             que la respuesta enviada contenga un campo 'shop' que coincida con
             el primer elemento del arreglo de la respuesta del 'insert' */
             const res = {
                 send(json) {
-                    assert.equal(json.shops , getShopsEmpty);
+                    assert.equal(json.shops , shopsEmpty);
                 }
             }
-            shopController.getShops(getShopsEmptyReq , res)
+            shopController.getShops(shopsEmptyReq , res)
+                .then(done)
+                .catch(done);
+        });
+    });
+
+    describe('#getShopsEnabled', function () {
+        it('Falla porque hubo un error an la BBDD', function (done) {
+            /* Hacemos que el insert de
+             Shop falle con una promesa fallida */
+            sandbox.stub(Shop, 'findEnabled').rejects();
+
+            const req = shopsReq;
+            /* Creamos una response mock que verifique el codigo de error 500 */
+            const res = testUtils.mockErrRes(500);
+
+            /* LLamamos a getShopsEnabled (el cual devuelve una promsesa) y que el 
+            test termine cuando el metodo se resuelva (pasando como callback de 
+            'then' y 'catch' el valor 'done') */
+            shopController.getShopsEnabled(req, res)
+                .then(done)
+                .catch(done);
+        });
+
+        it('Obtener el listado de shops habilitados en la BBDD', function (done) {
+            /* Hacemos que el get de Shop sea exitoso y que devuelva
+            el arreglo 'shopsEnabled' */
+            sandbox.stub(Shop, 'findEnabled').resolves(shopsEnabled);
+            
+            /* creamos un response mock con un metodo 'send' que verifique
+            que la respuesta enviada contenga un campo 'shop' que coincida con
+            el primer elemento del arreglo de la respuesta del 'insert' */
+            const res = {
+                send(json) {
+                    assert.equal(json.shops , shopsEnabled);
+                }
+            }
+            shopController.getShopsEnabled(shopsEnabledReq , res)
+                .then(done)
+                .catch(done);
+        });
+
+        it('Obtener el listado de shops en la BBDD cuando no hay shops habilitados', function (done) {
+            /* Hacemos que el get de Shop sea exitoso y que devuelva
+            el arreglo 'getShops' */
+            sandbox.stub(Shop, 'findEnabled').resolves(shopsEmpty);
+            
+            /* creamos un response mock con un metodo 'send' que verifique
+            que la respuesta enviada contenga un campo 'shop' que coincida con
+            el primer elemento del arreglo de la respuesta del 'insert' */
+            const res = {
+                send(json) {
+                    assert.equal(json.shops , shopsEmpty);
+                }
+            }
+            shopController.getShopsEnabled(shopsEmptyReq , res)
                 .then(done)
                 .catch(done);
         });
