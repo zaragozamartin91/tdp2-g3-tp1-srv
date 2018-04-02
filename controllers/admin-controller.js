@@ -12,7 +12,7 @@ exports.login = function (req, res) {
     console.log({ username, password });
 
     if (verifyLogin(username, password)) {
-        const token = signUser(username);
+        const token = signAdmin(mainConf.adminId);
 
         const expires = new Date(Date.now() + 1000 * 60 * 15);
         res.cookie('token', token.token, { expires });
@@ -26,11 +26,10 @@ exports.login = function (req, res) {
 };
 
 function verifyLogin(username, password) {
-    return username == 'hoycomo' && password == 'milanesas';
+    return username == mainConf.adminUsr &&
+        password == mainConf.adminPass;
 }
 
-function signUser(user) {
-    const id = user.id;
-    const username = user.username;
-    return tokenManager.signToken({ id, username });
+function signAdmin(adminId) {
+    return tokenManager.signToken({ adminId });
 }
