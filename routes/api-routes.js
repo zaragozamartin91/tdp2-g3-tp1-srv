@@ -14,6 +14,7 @@ router.post('/admin/login', adminController.login);
 
 //TODO : AGREGAR SEGURIDAD A NIVEL TOKEN
 router.get('/shops', shopController.getShops);
+router.get('/shops/enabled', shopController.getShopsEnabled);
 router.post('/shops', shopController.createShop);
 //router.delete('/shops/:shopId', shopController.deleteShop);
 
