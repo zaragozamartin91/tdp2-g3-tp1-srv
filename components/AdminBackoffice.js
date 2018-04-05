@@ -11,11 +11,7 @@ import AdminBackofficeBar from './AdminBackofficeBar';
 import AdminIndex from './AdminIndex';
 import AdminLogin from './AdminLogin';
 import ShopList from './ShopList';
-import Servers from './Servers';
-import ServerCreator from './ServerCreator';
 import ShopForm from './ShopForm';
-import Rules from './Rules';
-import RuleCreator from './RuleCreator';
 
 /* ESTE FRAGMENTO DE CODIGO ES REQUERIDO PARA LOS EVENTOS DE TIPO TOUCH O CLICK EN COMPONENTES MATERIAL-UI */
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -77,10 +73,6 @@ const AdminBackoffice = React.createClass({
 
                     <Route path="/shops/list" component={() => <ShopList token={token} />} />
                     <Route path="/shops/create" component={() => <ShopForm token={token} />} />
-                    
-                    <Route path="/servers/list" component={() => <Servers token={token} />} />
-
-                    <Route path="/rules/create" component={() => <RuleCreator token={token} />} />
 
                     <form
                         action='/admin/logout'

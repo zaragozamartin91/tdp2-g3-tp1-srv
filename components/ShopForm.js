@@ -15,8 +15,6 @@ import Header from './Header';
 
 /* FIN DE IMPORTS -------------------------------------------------------------------------------------- */
 
-const EMPTY_CALLBACK = () => { };
-
 const ShopForm = React.createClass({
     getDefaultProps() {
         return { token: '' };
@@ -26,6 +24,9 @@ const ShopForm = React.createClass({
         return {
             msgSnackbarOpen: false,
             name: '',
+            address: '',
+            phone: '',
+            zone: ''
         };
     },
 
@@ -52,17 +53,17 @@ const ShopForm = React.createClass({
     },
 
     checkFields() {
-        const { name } = this.state;
-        if ( !name ) return { ok: false, msg: 'Parametros incompletos' };
-        return { ok: true };
+        const { name, address, phone, zone } = this.state;
+        if (!name || !address || !phone || !zone) return { ok: false, msg: 'Parametros incompletos' };
+        else return { ok: true };
     },
 
     createShop() {
         const fieldsCheck = this.checkFields();
         if (!fieldsCheck.ok) return this.openSnackbar(fieldsCheck.msg);
 
-        const {  name } = this.state;
-        const body = {  name };
+        const { name, address, phone, zone } = this.state;
+        const body = { name, address, phone, zone };
         const config = { headers: { 'Authorization': `Bearer ${this.props.token}` } };
         axios.post('/api/v1/shops', body, config)
             .then(contents => {
@@ -80,9 +81,9 @@ const ShopForm = React.createClass({
             <div>
                 <Card style={{ backgroundColor: "rgba(255,255,255,0.7)" }} >
                     <CardHeader
-                        title="Crear comercio"
-                        subtitle="Vendedores de alimentos"
-                    />
+                        title="Dar de alta comercio"
+                        subtitle="Restaurante / comida al paso" />
+
                     <CardText expandable={false}>
                         <TextField
                             name="Nombre"
@@ -90,9 +91,30 @@ const ShopForm = React.createClass({
                             floatingLabelText="Nombre"
                             value={this.state.name}
                             onChange={e => this.setState({ name: e.target.value })} /><br />
-                        
-                        <div style={{ margin: '10px' }}>
-                        </div>
+
+                        <TextField
+                            name="Direccion"
+                            hint="Direccion"
+                            floatingLabelText="Direccion"
+                            value={this.state.address}
+                            onChange={e => this.setState({ address: e.target.value })} /><br />
+
+                        <TextField
+                            name="Barrio"
+                            hint="Barrio o distrito"
+                            floatingLabelText="Barrio"
+                            value={this.state.zone}
+                            onChange={e => this.setState({ zone: e.target.value })} /><br />
+
+                        <TextField
+                            name="Telefono"
+                            hint="Telefono sin guion ni espacios"
+                            floatingLabelText="Telefono"
+                            value={this.state.phone}
+                            onChange={e => this.setState({ phone: e.target.value })}
+                            type='number' /><br />
+
+                        <div style={{ margin: '10px' }} />
                     </CardText>
                     <CardActions>
                         <RaisedButton label="Crear comercio" secondary={true} onClick={this.createShop} />
@@ -103,8 +125,7 @@ const ShopForm = React.createClass({
                     open={this.state.msgSnackbarOpen}
                     message={this.state.snackbarMessage}
                     autoHideDuration={3000}
-                    onRequestClose={this.handleSnackbarRequestClose}
-                />
+                    onRequestClose={this.handleSnackbarRequestClose} />
             </div>
         );
     }
