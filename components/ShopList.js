@@ -12,6 +12,7 @@ import Snackbar from 'material-ui/Snackbar';
 import axios from 'axios';
 
 import Header from './Header';
+import ShopMenu from './ShopMenu';
 
 /* FIN DE IMPORTS -------------------------------------------------------------------------------------- */
 
@@ -25,7 +26,7 @@ function BanShopDialog(props) {
             url: `/api/v1/shops/${shopId}`,
             method: 'PUT',
             headers: { 'Authorization': `Bearer ${props.token}` },
-            data: props.shop 
+            data: props.shop
         }).then(contents => {
             console.log(contents.data);
             props.onSuccess();
@@ -42,7 +43,7 @@ function BanShopDialog(props) {
             onClick={props.onClose}
         />,
         <FlatButton
-            label="Banear"
+            label="Prohibir"
             primary={true}
             onClick={banShop}
         />,
@@ -50,11 +51,11 @@ function BanShopDialog(props) {
 
     return (
         <Dialog
-            title={`Banear comercio ${props.shop.id}`}
+            title={`Prohibir comercio ${props.shop.id}`}
             actions={actions}
             modal={true}
             open={props.open}>
-            ¿Desea banear el comercio?
+            ¿Desea Prohibir el comercio?
         </Dialog>
     );
 }
@@ -68,7 +69,8 @@ const ShopList = React.createClass({
         return {
             shops: [],
             errSnackbarOpen: false,
-            banShop: null
+            banShop: null,
+            shopMenu: null
         };
     },
 
@@ -126,6 +128,48 @@ const ShopList = React.createClass({
         };
     },
 
+    enableShop(shop) {
+        const self = this;
+        shop.enabled = true;
+        return function () {
+            axios({
+                url: `/api/v1/shops/${shop.id}`,
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${self.props.token}` },
+                data: shop
+            })
+                .then(self.loadShops)
+                .catch(cause => {
+                    console.error(cause);
+                    self.openErrSnackbar('Error al habilitar comercio');
+                });
+        };
+    },
+
+    showMenu(shop) {
+        const self = this;
+        return function () {
+            axios({
+                url: `/api/v1/shops/${shop.id}/menu`,
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${self.props.token}` }
+            })
+                .then(response => {
+                    console.log('showMenu axios response: ');
+                    console.log(response.data);
+                    self.setState({ shopMenu: response.data.menu });
+                })
+                .catch(cause => {
+                    console.error(cause);
+                    self.openErrSnackbar('Error al obtener menu de comercio');
+                });
+        };
+    },
+
+    handleMenuClose() {
+        this.setState({ shopMenu: null });
+    },
+
     render() {
         console.log("this.state.shops: " + this.state.shops);
 
@@ -143,16 +187,21 @@ const ShopList = React.createClass({
                 open={true}
                 onSuccess={this.handleShopBanSuccess(shop)}
                 onClose={this.closeBanDialog(shop)}
-                onError={() => this.openErrSnackbar(`Error al banear el comercio ${shop.id}`)} />;
+                onError={() => this.openErrSnackbar(`Error al Prohibir el comercio ${shop.id}`)} />;
+        }
+
+        let shopMenuElem = null;
+        if (this.state.shopMenu) {
+            shopMenuElem = <ShopMenu menu={this.state.shopMenu} goBack={this.handleMenuClose} />;
         }
 
         const shopCards = this.state.shops.map(shop => {
             const backColors = ['#1A9386', 'rgb(21, 114, 105)', '#134E48'];
             let colIdx = 0;
-            
+
             return (<Card style={{ backgroundColor: "rgba(255,255,255,0.7)" }} >
                 <CardHeader
-                    title={shop.id}
+                    title={`Comercio ${shop.id}`}
                     subtitle={shop.name}
                 />
                 <CardText expandable={false}>
@@ -161,12 +210,14 @@ const ShopList = React.createClass({
                     Telefono: {shop.phone} <br />
                 </CardText>
                 <CardActions>
-                    <FlatButton label="Banear" secondary={true} onClick={this.openBanDialog(shop)} />
+                    <FlatButton label="Prohibir" secondary={true} disabled={!shop.enabled} onClick={this.openBanDialog(shop)} />
+                    <FlatButton label="Habilitar" disabled={shop.enabled} onClick={this.enableShop(shop)} />
+                    <FlatButton label="Menu" onClick={this.showMenu(shop)} />
                 </CardActions>
             </Card>);
         });
 
-        const mainElem = banShopDialog || shopCards;
+        const mainElem = banShopDialog || shopMenuElem || shopCards;
 
         return (
             <div >

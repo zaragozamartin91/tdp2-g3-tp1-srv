@@ -14,8 +14,13 @@ router.post('/admin/login', adminController.login);
 
 //TODO : AGREGAR SEGURIDAD A NIVEL TOKEN
 
+/* Endpoints para obtener y dar de alta shops. Solo accessibles para el administrador */
 router.get('/shops', tokenValidator.verifyToken, tokenValidator.verifyAdminToken, shopController.getShops);
 router.post('/shops', tokenValidator.verifyToken, tokenValidator.verifyAdminToken, shopController.createShop);
+router.put('/shops/:shopId', tokenValidator.verifyToken, tokenValidator.verifyAdminToken, shopController.updateShop);
+
+router.get('/shops/:shopId/menu' , shopController.getShopMenu);
+
 router.get('/shops/enabled', shopController.getShopsEnabled);
 //router.delete('/shops/:shopId', shopController.deleteShop);
 
