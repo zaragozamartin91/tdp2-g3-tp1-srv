@@ -1,10 +1,8 @@
-const mainPath = '/main';
-const apiVersion = 'v1';
 
 module.exports = {
-    mainPath,
-    apiVersion,
-    apiRoutesPrefix: `/api/${apiVersion}`,
+    mainPath: '/main',
+    apiVersion: 'v1',
+    apiRoutesPrefix: '/api/v1',
     tokenSecret: 'El antiguo equipo de bindie',
     adminUsr: 'hoycomo',
     adminPass: 'milanesas',

@@ -5,6 +5,7 @@ function config() {
     let conf = {
         entry: {
             adminbackoffice: path.join(__dirname, 'components', 'AdminBackoffice.js'),
+            shopbackoffice: path.join(__dirname, 'components', 'ShopBackoffice.js'),
         },
 
         /* Se creara un archivo por cada entrada */
