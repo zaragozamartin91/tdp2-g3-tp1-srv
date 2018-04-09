@@ -24,7 +24,7 @@ const cookieTokenStr = cookie.split('; ').find(s => s.startsWith('token='));
 const cookieToken = cookieTokenStr ? cookieTokenStr.replace('token=', '') : null;
 
 const AdminBackoffice = React.createClass({
-    getInitialState: function () {
+    getInitialState() {
         return {
             token: null,
             user: null,
@@ -32,7 +32,7 @@ const AdminBackoffice = React.createClass({
         };
     },
 
-    componentDidMount: function () {
+    componentDidMount() {
         /* SE CARGAN LAS CANCIONES DESPUES QUE EL COMPONENTE HAYA SIDO MONTADO */
         console.log('AdminBackoffice MONTADA!');
         /* Si se encuentra un token en las cookies entonces se setea el mismo y se obtiene el usuario
@@ -41,14 +41,14 @@ const AdminBackoffice = React.createClass({
         else this.setState({ renderReady: true });
     },
 
-    setToken: function (token) {
+    setToken(token) {
         token = token.token || token;
         console.log('Seteando token: ' + token);
         this.setState({ token,  renderReady: true });
         
     },
 
-    render: function () {
+    render() {
         console.log('RENDERING AdminBackoffice!');
 
         //if (!this.state.renderReady) return (<span>Espere...</span>);
