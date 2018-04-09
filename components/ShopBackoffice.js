@@ -26,7 +26,8 @@ const ShopBackoffice = React.createClass({
         return {
             token: null,
             user: null,
-            renderReady: false
+            renderReady: false,
+            shop: null
         };
     },
 
@@ -43,13 +44,22 @@ const ShopBackoffice = React.createClass({
         token = token.token || token;
         console.log('Seteando token ' + token);
 
-        this.setState({ token, renderReady: true });
+        const config = { headers: { 'Authorization': `Bearer ${token}` } };
+        axios({
+            method: 'get', //you can set what request you want to be
+            url: '/api/v1/shopadm/myshop',
+            headers: { Authorization: 'Bearer ' + token }
+        })
+            .then(contents => {
+                console.log(contents.data);
+                this.setState({ token, shop: contents.data.shop, renderReady: true });
+            }).catch(console.error);
     },
 
     render() {
         console.log('RENDERING ShopBackoffice!');
 
-        //if (!this.state.renderReady) return (<span>Espere...</span>);
+        if (!this.state.renderReady) return (<span>Espere...</span>);
 
         const token = this.state.token;
         if (!token) return <ShopadmLogin onSubmit={this.setToken} />;

@@ -27,6 +27,7 @@ router.get('/shops/enabled', shopController.getShopsEnabled);
 
 /* Login para el backoffice de comercios */
 router.post('/shopadm/login' , shopadmController.login);
+router.get('/shopadm/myshop' , tokenValidator.verifyToken , shopadmController.getMyShop);
 
 module.exports = router;
 

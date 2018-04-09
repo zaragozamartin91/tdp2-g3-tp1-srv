@@ -2,6 +2,7 @@ const basicAuthParser = require('../utils/basic-auth-parser');
 const tokenManager = require('../utils/token-manager');
 const mainConf = require('../config/main-config');
 const responseUtils = require('../utils/response-utils');
+const Shop = require('../model/Shop');
 
 
 exports.login = function (req, res) {
@@ -43,3 +44,16 @@ function verifyLogin(username, password) {
 function signShop({ id, name }) {
     return tokenManager.signToken({ id, name });
 }
+
+exports.getMyShop = function (req, res) {
+    const { id = 0, name } = req.decodedToken;
+    Shop.findById(id).then(([shop]) => {
+        if (shop) return res.send({ shop });
+        else return Promise.reject({ code: 460, message: 'El shop no existe' });
+    }).catch(cause => {
+        const { code, message } = cause;
+        console.error(cause);
+        res.status(code || 500);
+        res.send(cause);
+    });
+};

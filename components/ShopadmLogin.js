@@ -46,7 +46,7 @@ const ShopadmLogin = React.createClass({
                 this.props.onSubmit(contents.data.token);
             })
             .catch(cause => {
-                console.error('Error');
+                console.error(cause);
                 this.setState({ errMsg: 'Credenciales invalidas' });
             });
     },
