@@ -78,48 +78,63 @@ const ShopForm = React.createClass({
     render() {
 
         return (
-            <div>
-                <Card style={{ backgroundColor: "rgba(255,255,255,0.7)" }} >
-                    <CardHeader
-                        title="Dar de alta comercio"
-                        subtitle="Restaurante / comida al paso" />
+            <div style={{paddingBottom:10 , backgroundColor:'rgba(255,255,255,0.7)'}}>
+                <div style={{ margin: 20 }}>
+                    <h1>Nuevo comercio</h1>
+                    <hr />
 
-                    <CardText expandable={false}>
-                        <TextField
-                            name="Nombre"
-                            hint="Nombre"
-                            floatingLabelText="Nombre"
-                            value={this.state.name}
-                            onChange={e => this.setState({ name: e.target.value })} /><br />
+                    <h2>Datos del comercio</h2>
 
-                        <TextField
-                            name="Direccion"
-                            hint="Direccion"
-                            floatingLabelText="Direccion"
-                            value={this.state.address}
-                            onChange={e => this.setState({ address: e.target.value })} /><br />
+                    <TextField
+                        name="Nombre"
+                        hint="Nombre"
+                        floatingLabelText="Nombre"
+                        value={this.state.name}
+                        onChange={e => this.setState({ name: e.target.value })} /><br />
 
-                        <TextField
-                            name="Barrio"
-                            hint="Barrio o distrito"
-                            floatingLabelText="Barrio"
-                            value={this.state.zone}
-                            onChange={e => this.setState({ zone: e.target.value })} /><br />
+                    <TextField
+                        name="Direccion"
+                        hint="Direccion"
+                        floatingLabelText="Direccion"
+                        value={this.state.address}
+                        onChange={e => this.setState({ address: e.target.value })} /><br />
 
-                        <TextField
-                            name="Telefono"
-                            hint="Telefono sin guion ni espacios"
-                            floatingLabelText="Telefono"
-                            value={this.state.phone}
-                            onChange={e => this.setState({ phone: e.target.value })}
-                            type='number' /><br />
+                    <TextField
+                        name="Barrio"
+                        hint="Barrio o distrito"
+                        floatingLabelText="Barrio"
+                        value={this.state.zone}
+                        onChange={e => this.setState({ zone: e.target.value })} /><br />
 
-                        <div style={{ margin: '10px' }} />
-                    </CardText>
-                    <CardActions>
-                        <RaisedButton label="Crear comercio" secondary={true} onClick={this.createShop} />
-                    </CardActions>
-                </Card>
+                    <TextField
+                        name="Telefono"
+                        hint="Telefono sin guion ni espacios"
+                        floatingLabelText="Telefono"
+                        value={this.state.phone}
+                        onChange={e => this.setState({ phone: e.target.value })}
+                        type='number' /><br />
+
+                    <hr />
+
+                    <h2>Datos del administrador del comercio</h2>
+
+                    <TextField
+                        name="Nombre"
+                        hint="Nombre"
+                        floatingLabelText="Nombre"
+                        value={this.state.adminName}
+                        onChange={e => this.setState({ adminName: e.target.value })} /><br />
+
+                    <TextField
+                        name="Email"
+                        hint="Email"
+                        floatingLabelText="Email"
+                        value={this.state.adminEmail}
+                        onChange={e => this.setState({ adminEmail: e.target.value })} /><br />
+
+                    <RaisedButton style={{ marginTop: 20 }} label="Crear comercio" onClick={this.createShop} secondary={true} />
+
+                </div>
 
                 <Snackbar
                     open={this.state.msgSnackbarOpen}
