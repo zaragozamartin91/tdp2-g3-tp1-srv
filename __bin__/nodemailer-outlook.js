@@ -5,8 +5,8 @@ var transport = nodemailer.createTransport({
     secureConnection: false, // TLS requires secureConnection to be false
     port: 587, // port for secure SMTP
     auth: {
-        user: "zaragozamartin91@outlook.com",
-        pass: "21031991mZO"
+        user: "hoycomog3@outlook.com",
+        pass: "Milanesas91"
     },
     tls: {
         ciphers:'SSLv3'
@@ -14,7 +14,7 @@ var transport = nodemailer.createTransport({
 });
 
 let mailOptions = {
-    from: '"Martin" <zaragozamartin91@outlook.com>', // sender address
+    from: '"Martin" <hoycomog3@outlook.com>', // sender address
     to: 'zaragozamartin91@gmail.com', // list of receivers
     subject: 'Hello', // Subject line
     text: 'Hello world?', // plain text body
