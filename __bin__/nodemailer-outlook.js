@@ -1,4 +1,4 @@
-var nodemailer = require('nodemailer')
+var nodemailer = require('nodemailer');
 
 var transport = nodemailer.createTransport({
     host: "smtp-mail.outlook.com", // hostname

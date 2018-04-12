@@ -12,6 +12,7 @@ const shopadmController = require('../controllers/shopadm-controller');
 const router = express.Router();
 
 router.post('/admin/login', adminController.login);
+router.get('/districts', adminController.getDistricts);
 
 //TODO : AGREGAR SEGURIDAD A NIVEL TOKEN
 
@@ -20,17 +21,17 @@ router.get('/shops', tokenValidator.verifyToken, tokenValidator.verifyAdminToken
 router.post('/shops', tokenValidator.verifyToken, tokenValidator.verifyAdminToken, shopController.createShop);
 router.put('/shops/:shopId', tokenValidator.verifyToken, tokenValidator.verifyAdminToken, shopController.updateShop);
 
-router.get('/shops/:shopId/menu' , shopController.getShopMenu);
+router.get('/shops/:shopId/menu', shopController.getShopMenu);
 
 router.get('/shops/enabled', shopController.getShopsEnabled);
 //router.delete('/shops/:shopId', shopController.deleteShop);
 
 /* Login para el backoffice de comercios */
-router.post('/shopadm/login' , shopadmController.login);
-router.get('/shopadm/myshop' , tokenValidator.verifyToken , shopadmController.getMyShop);
-
-module.exports = router;
+router.post('/shopadm/login', shopadmController.login);
+router.get('/shopadm/myshop', tokenValidator.verifyToken, shopadmController.getMyShop);
 
 /* CREA LOS DATOS DE PRUEBA DE LA APP */
 router.post('/test-data', testDataController.createTestData);
 router.delete('/test-data', testDataController.deleteTestData);
+
+module.exports = router;
