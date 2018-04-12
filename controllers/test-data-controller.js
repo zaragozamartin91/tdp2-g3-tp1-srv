@@ -4,10 +4,14 @@ const responseUtils = require('../utils/response-utils');
 const logger = require('log4js').getLogger('test-data-controller');
 
 const Shop = require('../model/Shop');
+const District = require('../model/District');
 
 function createTables() {
     return Shop.createTable().then(() => {
         console.log("Se creo la tabla de Shops");
+        return District.createTable();
+    }).then(b => {
+        console.log('Se creo la tabla de distritos');
         return true;
     });
 }
@@ -27,7 +31,10 @@ function insertShops() {
 
 exports.createTestData = function (req, res) {
     createTables().then(b => {
-        console.log('Tabla de shops creada');
+        console.log('TABLAS CREADAS');
+        return District.insertDefaults();
+    }).then(b => {
+        console.log('Distritos insertados');
         return insertShops();
     }).then(b => {
         console.log('Shops insertados');
@@ -42,6 +49,9 @@ exports.createTestData = function (req, res) {
 function deleteTables() {
     return Shop.deleteTable().then(() => {
         console.log("Se elimino la tabla de Shops");
+        return District.deleteTable();
+    }).then(b => {
+        console.log("Se elimino la tabla de Distritos");
         return true;
     });
 }
