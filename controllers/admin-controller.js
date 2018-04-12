@@ -3,6 +3,7 @@ const tokenManager = require('../utils/token-manager');
 const mainConf = require('../config/main-config');
 const responseUtils = require('../utils/response-utils');
 
+const District = require('../model/District');
 
 exports.login = function (req, res) {
     const basicAuth = basicAuthParser.parse(req);
@@ -33,3 +34,8 @@ function verifyLogin(username, password) {
 function signAdmin(adminId) {
     return tokenManager.signToken({ adminId });
 }
+
+
+exports.getDistricts = function (req, res) {
+    return District.find().then(districts => res.send({ districts }));
+};
