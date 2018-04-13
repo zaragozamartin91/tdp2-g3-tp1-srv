@@ -20,4 +20,4 @@ services:
     environment:
       - POSTGRES_PASSWORD=root
       - POSTGRES_USER=root
-      - POSTGRES_DB=sharedserv
+      - POSTGRES_DB=hoycomo

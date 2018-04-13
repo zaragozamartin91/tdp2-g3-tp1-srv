@@ -4,6 +4,10 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+log/
+
+# ignoro esto para soportar configuraciones distintas
+model/model-config.js
 
 # Runtime data
 pids
@@ -57,3 +61,4 @@ typings/
 # dotenv environment variables file
 .env
 
+model/model-config.js

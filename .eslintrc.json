@@ -22,8 +22,8 @@
             4
         ],
         "linebreak-style": [
-            "error",
-            "linux"
+            "off",
+            "unix"
         ],
         "quotes": [
             "off",

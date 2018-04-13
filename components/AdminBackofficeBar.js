@@ -29,28 +29,28 @@ function SubMenu(props) {
 SubMenu.muiName = 'IconMenu';
 
 const AdminBackofficeBar = React.createClass({
-    getInitialState: function () {
+    getInitialState() {
         return {
             drawerOpen: false
         };
     },
 
-    getDefaultProps: function () {
+    getDefaultProps() {
         return {
             onLogout: () => { }
         };
     },
 
-    closeDrawer: function () {
+    closeDrawer() {
         this.setState({ drawerOpen: false });
     },
 
-    toggleDrawer: function () {
+    toggleDrawer() {
         const drawerOpen = !this.state.drawerOpen;
         this.setState({ drawerOpen });
     },
 
-    render: function () {
+    render() {
         return (
             <div >
                 <AppBar
@@ -60,25 +60,12 @@ const AdminBackofficeBar = React.createClass({
 
                 <Drawer open={this.state.drawerOpen} docked={false} onRequestChange={open => this.setState({ drawerOpen: open })} >
                     <Link to="/index" onClick={this.closeDrawer}><MenuItem >Principal</MenuItem></Link>
-                    <MenuItem primaryText='Usuarios'
-                        rightIcon={<ArrowDropRight />}
-                        menuItems={[
-                            <Link to="/users/create" onClick={this.closeDrawer}><MenuItem >Crear</MenuItem></Link>,
-                            <Link to="/users/list" onClick={this.closeDrawer}><MenuItem >Ver</MenuItem></Link>
-                        ]} />
 
-                    <MenuItem primaryText='Servidores'
+                    <MenuItem primaryText='Comercios'
                         rightIcon={<ArrowDropRight />}
                         menuItems={[
-                            <Link to="/servers/list" onClick={this.closeDrawer}><MenuItem >Ver</MenuItem></Link>,
-                            <Link to="/servers/create" onClick={this.closeDrawer}><MenuItem >Crear</MenuItem></Link>,
-                        ]} />
-
-                    <MenuItem primaryText='Reglas'
-                        rightIcon={<ArrowDropRight />}
-                        menuItems={[
-                            <Link to="/rules/list" onClick={this.closeDrawer}><MenuItem >Ver</MenuItem></Link>,
-                            <Link to="/rules/create" onClick={this.closeDrawer}><MenuItem >Crear</MenuItem></Link>
+                            <Link to="/shops/create" onClick={this.closeDrawer}><MenuItem >Crear</MenuItem></Link>,
+                            <Link to="/shops/list" onClick={this.closeDrawer}><MenuItem >Ver</MenuItem></Link>
                         ]} />
                 </Drawer>
             </div >
