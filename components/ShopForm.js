@@ -9,6 +9,9 @@ import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import Snackbar from 'material-ui/Snackbar';
 
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+
 import axios from 'axios';
 
 import Header from './Header';
@@ -26,12 +29,15 @@ const ShopForm = React.createClass({
             name: '',
             address: '',
             phone: '',
-            zone: ''
+            zone: 1,
+            districts: null
         };
     },
 
     componentDidMount() {
         console.log('token: ' + this.props.token);
+        axios.get('/api/v1/districts')
+            .then(response => this.setState({ districts: response.data.districts }));
     },
 
     openSnackbar(msg) {
@@ -63,7 +69,9 @@ const ShopForm = React.createClass({
         if (!fieldsCheck.ok) return this.openSnackbar(fieldsCheck.msg);
 
         const { name, address, phone, zone } = this.state;
-        const body = { name, address, phone, zone };
+        const zoneObj = this.state.districts.find(d => d.id == zone);
+        /* TODO : POR AHORA SE GUARDA LA ZONA COMO UN VARCHAR. LA MISMA DEBERIA GUARDARSE COMO UN ID DE DISTRITO */
+        const body = { name, address, phone, zone: zoneObj.name };
         const config = { headers: { 'Authorization': `Bearer ${this.props.token}` } };
         axios.post('/api/v1/shops', body, config)
             .then(contents => {
@@ -75,51 +83,78 @@ const ShopForm = React.createClass({
             });
     },
 
+    handleZoneChange(event, index, value) {
+        this.setState({ zone: value });
+    },
+
     render() {
+        // si los distritos no fueron cargados, entonces se indica al usuario que debe esperar
+        if (!this.state.districts) return <span>Espere...</span>;
+
+        const districtMenuItems = [];
+        this.state.districts.forEach(district => districtMenuItems.push(
+            <MenuItem value={district.id} primaryText={district.name} />
+        ));
 
         return (
-            <div>
-                <Card style={{ backgroundColor: "rgba(255,255,255,0.7)" }} >
-                    <CardHeader
-                        title="Dar de alta comercio"
-                        subtitle="Restaurante / comida al paso" />
+            <div style={{ paddingBottom: 10, backgroundColor: 'rgba(255,255,255,0.7)' }}>
+                <div style={{ margin: 20 }}>
+                    <h1>Nuevo comercio</h1>
+                    <hr />
 
-                    <CardText expandable={false}>
-                        <TextField
-                            name="Nombre"
-                            hint="Nombre"
-                            floatingLabelText="Nombre"
-                            value={this.state.name}
-                            onChange={e => this.setState({ name: e.target.value })} /><br />
+                    <h2>Datos del comercio</h2>
 
-                        <TextField
-                            name="Direccion"
-                            hint="Direccion"
-                            floatingLabelText="Direccion"
-                            value={this.state.address}
-                            onChange={e => this.setState({ address: e.target.value })} /><br />
+                    <TextField
+                        name="Nombre"
+                        hint="Nombre"
+                        floatingLabelText="Nombre"
+                        value={this.state.name}
+                        onChange={e => this.setState({ name: e.target.value })} /><br />
 
-                        <TextField
-                            name="Barrio"
-                            hint="Barrio o distrito"
-                            floatingLabelText="Barrio"
-                            value={this.state.zone}
-                            onChange={e => this.setState({ zone: e.target.value })} /><br />
+                    <TextField
+                        name="Direccion"
+                        hint="Direccion"
+                        floatingLabelText="Direccion"
+                        value={this.state.address}
+                        onChange={e => this.setState({ address: e.target.value })} /><br />
 
-                        <TextField
-                            name="Telefono"
-                            hint="Telefono sin guion ni espacios"
-                            floatingLabelText="Telefono"
-                            value={this.state.phone}
-                            onChange={e => this.setState({ phone: e.target.value })}
-                            type='number' /><br />
+                    <DropDownMenu
+                        value={this.state.zone}
+                        onChange={this.handleZoneChange}
+                        openImmediately={false}
+                        style={{ width: 200, padding: 0 }}>
+                        {districtMenuItems}
+                    </DropDownMenu> <br />
 
-                        <div style={{ margin: '10px' }} />
-                    </CardText>
-                    <CardActions>
-                        <RaisedButton label="Crear comercio" secondary={true} onClick={this.createShop} />
-                    </CardActions>
-                </Card>
+                    <TextField
+                        name="Telefono"
+                        hint="Telefono sin guion ni espacios"
+                        floatingLabelText="Telefono"
+                        value={this.state.phone}
+                        onChange={e => this.setState({ phone: e.target.value })}
+                        type='number' /><br />
+
+                    <hr />
+
+                    <h2>Datos del administrador del comercio</h2>
+
+                    <TextField
+                        name="Nombre"
+                        hint="Nombre"
+                        floatingLabelText="Nombre"
+                        value={this.state.adminName}
+                        onChange={e => this.setState({ adminName: e.target.value })} /><br />
+
+                    <TextField
+                        name="Email"
+                        hint="Email"
+                        floatingLabelText="Email"
+                        value={this.state.adminEmail}
+                        onChange={e => this.setState({ adminEmail: e.target.value })} /><br />
+
+                    <RaisedButton style={{ marginTop: 20 }} label="Crear comercio" onClick={this.createShop} secondary={true} />
+
+                </div>
 
                 <Snackbar
                     open={this.state.msgSnackbarOpen}
