@@ -5,15 +5,35 @@ const logger = require('log4js').getLogger('test-data-controller');
 
 const Shop = require('../model/Shop');
 const District = require('../model/District');
+const ShopAdmin = require('../model/ShopAdmin');
 
 function createTables() {
-    return Shop.createTable().then(() => {
-        console.log("Se creo la tabla de Shops");
-        return District.createTable();
-    }).then(b => {
-        console.log('Se creo la tabla de distritos');
-        return true;
-    });
+    return District.createTable()
+        .then( e => {
+            console.log('Tabla de distritos creada');
+            return ShopAdmin.createTable();
+        } ).then(e => {
+            console.log('Tabla de administradores de shops creada');
+            return Shop.createTable();
+        }).then(e => {
+            console.log('Tabla de shops creada');
+            return true;
+        }).catch(cause=> {
+            console.error(cause);
+            return false;
+        });
+}
+
+function insertShopAdmins() {
+    const pr = [];
+    for (let shopi = 0; shopi < 3; shopi++) {
+        let name = 'admin_' + shopi;
+        pr.push(ShopAdmin.insert({
+            name: name,
+            email: name + '@mail.com'
+        }));
+    }
+    return Promise.all(pr);
 }
 
 function insertShops() {
@@ -23,7 +43,10 @@ function insertShops() {
             name: 'shop_' + shopi,
             phone: '445567890',
             address: 'address_' + shopi,
-            zone: 'zone_' + shopi
+            zone: 'zone_' + shopi,
+            lat: "0.11111000",
+            long: "1.00001111",
+            adminid: 1
         }));
     }
     return Promise.all(pr);
@@ -35,12 +58,15 @@ exports.createTestData = function (req, res) {
         return District.insertDefaults();
     }).then(b => {
         console.log('Distritos insertados');
+        return insertShopAdmins();
+    }).then(b => {
+        console.log('Admins insertados');
         return insertShops();
     }).then(b => {
         console.log('Shops insertados');
         res.send({ msg: "exito" });
     }).catch(cause => {
-        console.log("Hubo un problema al crear las tablas");
+        console.error(cause);
         responseUtils.sendMsgCodeResponse(res, "Hubo un problema al crear las tablas", 500);
     });
 };
@@ -52,7 +78,14 @@ function deleteTables() {
         return District.deleteTable();
     }).then(b => {
         console.log("Se elimino la tabla de Distritos");
+        return ShopAdmin.deleteTable();
+    })
+    .then(b => {
+        console.log("Se elimino la tabla de shop admins");
         return true;
+    }).catch(cause => {
+        console.error(cause);
+        responseUtils.sendMsgCodeResponse(res, "Hubo un problema al eliminar las tablas", 500);
     });
 }
 

@@ -1,15 +1,19 @@
 const dbManager = require('./db-manager');
+const ShopAdmin = require('./ShopAdmin');
 
 const table = 'shops';
 const idType = 'SERIAL'
 
-function Shop(id, name, address, phone, zone, enabled) {
+function Shop(id, name, address, phone, zone, enabled, lat, long, adminid) {
     this.id = id;
     this.name = name;
     this.address = address;
     this.phone = phone
     this.zone = zone;
     this.enabled = enabled;
+    this.lat = lat;
+    this.long = long;
+    this.adminid = adminid;
 }
 
 Shop.createTable = function () {
@@ -19,7 +23,10 @@ Shop.createTable = function () {
         address VARCHAR(64) NOT NULL,
         phone VARCHAR(32) NOT NULL,
         zone VARCHAR(64) NOT NULL,
-        enabled BOOLEAN DEFAULT TRUE
+        enabled BOOLEAN DEFAULT FALSE,
+        lat VARCHAR(64) NOT NULL,
+        long VARCHAR(64) NOT NULL,
+        adminid int REFERENCES ${ShopAdmin.table}(id) ON DELETE CASCADE
     )`;
     return dbManager.queryPromise(sql, []);
 }
@@ -30,17 +37,17 @@ Shop.deleteTable = function () {
 }
 
 Shop.insert = function (json) {
-    const { name, address, phone, zone } = json;
+    const { name, address, phone, zone, lat, long, adminid } = json;
 
-    const sql = `INSERT INTO ${table}(name, address, phone, zone) VALUES($1,$2,$3,$4) RETURNING *`;
-    const values = [name, address, phone, zone];
+    const sql = `INSERT INTO ${table}(name, address, phone, zone, lat, long, adminid) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
+    const values = [name, address, phone, zone, lat, long, adminid];
     return dbManager.queryPromise(sql, values, fromRows);
 }
 
 Shop.update = function (json) {
-    const { id, name, address, phone, zone } = json;
-    const sql = `UPDATE ${table} SET name=$1, address=$2, phone=$3, zone=$4 WHERE id=$5 RETURNING *`;
-    const values = [name, address, phone, zone, id];
+    const { id, name, address, phone, zone, lat, long, adminid } = json;
+    const sql = `UPDATE ${table} SET name=$1, address=$2, phone=$3, zone=$4, lat=$5, long=$6, adminid=$7 WHERE id=$8 RETURNING *`;
+    const values = [name, address, phone, zone, lat, long, adminid, id];
     return dbManager.queryPromise(sql, values, fromRows);
 };
 
@@ -62,8 +69,8 @@ Shop.deleteById = function (shop) {
  * @param {object} json Objeto a partir del cual crear el shop 
  */
 function fromJson(json) {
-    const { id, name, address, phone, zone, enabled = true } = json;
-    return new Shop(id, name, address, phone, zone, enabled);
+    const { id, name, address, phone, zone, enabled = true, lat, long, adminid } = json;
+    return new Shop(id, name, address, phone, zone, enabled, lat, long, adminid);
 }
 
 function fromRows(rows) {

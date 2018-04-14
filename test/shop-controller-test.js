@@ -13,7 +13,10 @@ const insertedShops1 = Shop.fromRows([
         "address": "Calle falsa 909",
         "phone": "Caballito",
         "zone": "1212121233",
-        "enabled": true
+        "enabled": true,
+        "lat": "0.11111000",
+        "long": "1.00001111",
+        "adminid": "1"
     }
 ]);
 
@@ -23,7 +26,10 @@ const createShopReq1 = {
         "name": "Pizzeria la mas rica 2",
         "address": "Calle falsa 909",
         "phone": "1212121233",
-        "zone": "Caballito"
+        "zone": "Caballito",
+        "lat": "0.11111000",
+        "long": "1.00001111",
+        "adminid": "1"
     }
 };
 
@@ -36,7 +42,10 @@ const shops = Shop.fromRows([
         "address": "Calle falsa 909",
         "phone": "Caballito",
         "zone": "1212121233",
-        "enabled": true
+        "enabled": true,
+        "lat": "0.11111000",
+        "long": "1.00001111",
+        "adminid": "1"
     },
     {
         "id": 4,
@@ -44,7 +53,10 @@ const shops = Shop.fromRows([
         "address": "Calle falsa 1009",
         "phone": "Palermo",
         "zone": "1333444455",
-        "enabled": false
+        "enabled": false,
+        "lat": "0.11111000",
+        "long": "1.00001111",
+        "adminid": "1"
     }
 ]);
 
@@ -58,7 +70,10 @@ const shopsReq = {
                 "address": "Calle falsa 909",
                 "phone": "Caballito",
                 "zone": "1212121233",
-                "enabled": true
+                "enabled": true,
+                "lat": "0.11111000",
+                "long": "1.00001111",
+                "adminid": "1"
             },
             {
                 "id": 4,
@@ -66,7 +81,10 @@ const shopsReq = {
                 "address": "Calle falsa 1009",
                 "phone": "Palermo",
                 "zone": "1333444455",
-                "enabled": false
+                "enabled": false,
+                "lat": "0.11111000",
+                "long": "1.00001111",
+                "adminid": "1"
             }
         ]
     }
@@ -79,7 +97,10 @@ const shopsEnabled = Shop.fromRows([
         "address": "Calle falsa 909",
         "phone": "Caballito",
         "zone": "1212121233",
-        "enabled": true
+        "enabled": true,
+        "lat": "0.11111000",
+        "long": "1.00001111",
+        "adminid": "1"
     },
     {
         "id": 4,
@@ -87,7 +108,10 @@ const shopsEnabled = Shop.fromRows([
         "address": "Calle falsa 1009",
         "phone": "Palermo",
         "zone": "1333444455",
-        "enabled": true
+        "enabled": true,
+        "lat": "0.11111000",
+        "long": "1.00001111",
+        "adminid": "1"
     }
 ]);
 
@@ -100,7 +124,10 @@ const shopsEnabledReq = {
                 "address": "Calle falsa 909",
                 "phone": "Caballito",
                 "zone": "1212121233",
-                "enabled": true
+                "enabled": true,
+                "lat": "0.11111000",
+                "long": "1.00001111",
+                "adminid": "1"
             },
             {
                 "id": 4,
@@ -108,7 +135,10 @@ const shopsEnabledReq = {
                 "address": "Calle falsa 1009",
                 "phone": "Palermo",
                 "zone": "1333444455",
-                "enabled": false
+                "enabled": false,
+                "lat": "0.11111000",
+                "long": "1.00001111",
+                "adminid": "1"
             }
         ]
     }
