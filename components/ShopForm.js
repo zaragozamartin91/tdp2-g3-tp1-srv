@@ -30,7 +30,11 @@ const ShopForm = React.createClass({
             address: '',
             phone: '',
             zone: 1,
-            districts: null
+            districts: null,
+            adminEmail: '',
+            adminName: '',
+            lat: '',
+            long: ''
         };
     },
 
@@ -59,19 +63,20 @@ const ShopForm = React.createClass({
     },
 
     checkFields() {
-        const { name, address, phone, zone } = this.state;
-        if (!name || !address || !phone || !zone) return { ok: false, msg: 'Parametros incompletos' };
-        else return { ok: true };
+        const { name, address, phone, zone, adminEmail, adminName, lat, long } = this.state;
+        if (!name || !address || !phone || !zone || !adminEmail || !adminName || !lat || !long) {
+            return { ok: false, msg: 'Parametros incompletos' };
+        } else return { ok: true };
     },
 
     createShop() {
         const fieldsCheck = this.checkFields();
         if (!fieldsCheck.ok) return this.openSnackbar(fieldsCheck.msg);
 
-        const { name, address, phone, zone } = this.state;
+        const { name, address, phone, zone, adminEmail, adminName, lat, long } = this.state;
         const zoneObj = this.state.districts.find(d => d.id == zone);
         /* TODO : POR AHORA SE GUARDA LA ZONA COMO UN VARCHAR. LA MISMA DEBERIA GUARDARSE COMO UN ID DE DISTRITO */
-        const body = { name, address, phone, zone: zoneObj.name };
+        const body = { name, address, phone, zone: zoneObj.name, adminEmail, adminName, lat, long };
         const config = { headers: { 'Authorization': `Bearer ${this.props.token}` } };
         axios.post('/api/v1/shops', body, config)
             .then(contents => {
@@ -117,6 +122,20 @@ const ShopForm = React.createClass({
                         floatingLabelText="Direccion"
                         value={this.state.address}
                         onChange={e => this.setState({ address: e.target.value })} /><br />
+
+                    <TextField
+                        name="Latitud"
+                        hint="Latitud"
+                        floatingLabelText="Latitud"
+                        value={this.state.lat}
+                        onChange={e => this.setState({ lat: e.target.value })} />
+
+                    <TextField
+                        name="Longitud"
+                        hint="Longitud"
+                        floatingLabelText="Longitud"
+                        value={this.state.long}
+                        onChange={e => this.setState({ long: e.target.value })} /><br />
 
                     <DropDownMenu
                         value={this.state.zone}
