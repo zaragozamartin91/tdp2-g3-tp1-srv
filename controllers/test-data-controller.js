@@ -7,18 +7,20 @@ const Shop = require('../model/Shop');
 const District = require('../model/District');
 const ShopAdmin = require('../model/ShopAdmin');
 
+const generatePassword = require('password-generator');
+
 function createTables() {
     return District.createTable()
-        .then( e => {
+        .then(e => {
             console.log('Tabla de distritos creada');
             return ShopAdmin.createTable();
-        } ).then(e => {
+        }).then(e => {
             console.log('Tabla de administradores de shops creada');
             return Shop.createTable();
         }).then(e => {
             console.log('Tabla de shops creada');
             return true;
-        }).catch(cause=> {
+        }).catch(cause => {
             console.error(cause);
             return false;
         });
@@ -30,7 +32,8 @@ function insertShopAdmins() {
         let name = 'admin_' + shopi;
         pr.push(ShopAdmin.insert({
             name: name,
-            email: name + '@mail.com'
+            email: name + '@mail.com',
+            password: generatePassword()
         }));
     }
     return Promise.all(pr);
@@ -79,13 +82,11 @@ function deleteTables() {
     }).then(b => {
         console.log("Se elimino la tabla de Distritos");
         return ShopAdmin.deleteTable();
-    })
-    .then(b => {
+    }).then(b => {
         console.log("Se elimino la tabla de shop admins");
         return true;
     }).catch(cause => {
         console.error(cause);
-        responseUtils.sendMsgCodeResponse(res, "Hubo un problema al eliminar las tablas", 500);
     });
 }
 

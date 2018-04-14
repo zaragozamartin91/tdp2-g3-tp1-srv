@@ -6,6 +6,7 @@ function config() {
         entry: {
             adminbackoffice: path.join(__dirname, 'components', 'AdminBackoffice.js'),
             shopbackoffice: path.join(__dirname, 'components', 'ShopBackoffice.js'),
+            shopreg: path.join(__dirname, 'components', 'ShopReg.js'),
         },
 
         /* Se creara un archivo por cada entrada */
