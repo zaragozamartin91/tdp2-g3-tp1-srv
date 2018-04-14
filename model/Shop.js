@@ -2,7 +2,8 @@ const dbManager = require('./db-manager');
 const ShopAdmin = require('./ShopAdmin');
 
 const table = 'shops';
-const idType = 'SERIAL'
+const idType = 'SERIAL';
+
 
 function Shop(id, name, address, phone, zone, enabled, lat, long, adminid) {
     this.id = id;
@@ -108,6 +109,7 @@ Shop.findEnabled = function () {
 //        // hacer cosas con el error
 //    })
 
+Shop.table = table
 
 //esto indica que TODA la clase Shop sera exportada
 module.exports = Shop; 

@@ -6,6 +6,7 @@ const logger = require('log4js').getLogger('test-data-controller');
 const Shop = require('../model/Shop');
 const District = require('../model/District');
 const ShopAdmin = require('../model/ShopAdmin');
+const ShopDetails = require('../model/ShopDetails');
 
 function createTables() {
     return District.createTable()
@@ -17,6 +18,9 @@ function createTables() {
             return Shop.createTable();
         }).then(e => {
             console.log('Tabla de shops creada');
+            return ShopDetails.createTable();
+        }).then(e => {
+            console.log('Tabla de shops details creada');
             return true;
         }).catch(cause=> {
             console.error(cause);
@@ -52,6 +56,17 @@ function insertShops() {
     return Promise.all(pr);
 }
 
+function insertShopDetails() {
+    const pr = [];
+    for (let shopi = 1; shopi < 3; shopi++) {
+        pr.push(ShopDetails.insert({
+            foodtype: 'italiana',
+            shopid: shopi
+        }));
+    }
+    return Promise.all(pr);
+}
+
 exports.createTestData = function (req, res) {
     createTables().then(b => {
         console.log('TABLAS CREADAS');
@@ -64,6 +79,9 @@ exports.createTestData = function (req, res) {
         return insertShops();
     }).then(b => {
         console.log('Shops insertados');
+        return insertShopDetails();
+    }).then(b => {
+        console.log('Shops details insertados');
         res.send({ msg: "exito" });
     }).catch(cause => {
         console.error(cause);
@@ -71,18 +89,16 @@ exports.createTestData = function (req, res) {
     });
 };
 
-
 function deleteTables() {
-    return Shop.deleteTable().then(() => {
+    return ShopDetails.deleteTable().then(() => {
+        console.log("Se elimino la tabla de Shops details");
+        return Shop.deleteTable();
+    }).then(b => {
         console.log("Se elimino la tabla de Shops");
         return District.deleteTable();
     }).then(b => {
         console.log("Se elimino la tabla de Distritos");
         return ShopAdmin.deleteTable();
-    })
-    .then(b => {
-        console.log("Se elimino la tabla de shop admins");
-        return true;
     }).catch(cause => {
         console.error(cause);
         responseUtils.sendMsgCodeResponse(res, "Hubo un problema al eliminar las tablas", 500);
