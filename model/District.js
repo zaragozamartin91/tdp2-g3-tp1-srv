@@ -12,7 +12,7 @@ exports.createTable = function () {
 };
 
 exports.deleteTable = function () {
-    return dbManager.queryPromise(`DROP TABLE ${table}`);
+    return dbManager.queryPromise(`DROP TABLE ${table}`, []);
 };
 
 exports.insert = function (name) {
