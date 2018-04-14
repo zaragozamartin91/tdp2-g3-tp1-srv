@@ -62,3 +62,7 @@ typings/
 .env
 
 model/model-config.js
+
+package-lock.json
+yarn.lock
+
