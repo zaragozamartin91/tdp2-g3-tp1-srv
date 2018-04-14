@@ -1,5 +1,11 @@
 const Shop = require('../model/Shop');
+const ShopAdmin = require('../model/ShopAdmin');
+
+const generatePassword = require('password-generator');
+
 const responseUtils = require('../utils/response-utils');
+const emailSender = require('../utils/email-sender');
+const tokenManager = require('../utils/token-manager');
 
 exports.getShops = function (req, res) {
     return Shop.find()
@@ -23,15 +29,48 @@ exports.getShopsEnabled = function (req, res) {
         });
 };
 
+
+let thisUrl = process.env.URL || 'http://localhost:5000';
+
 exports.createShop = function (req, res) {
     const shopJson = req.body;
-    return Shop.insert(shopJson)
-        .then(([shop]) => {
-            res.send({ shop });
-        })
-        .catch(cause => {
-            console.error("Hubo un problema al crear el Shop: " + JSON.stringify(shopJson) + ", " + cause);
-            responseUtils.sendMsgCodeResponse(res, "Hubo un problema al crear el Shop: " + JSON.stringify(shopJson) + ", " + cause, 500);
+
+    const shopName = shopJson.name;
+    const { adminName, adminEmail } = shopJson;
+    const adminPassword = generatePassword();
+
+    const adminObj = {
+        name: adminName, email: adminEmail, password: adminPassword
+    };
+
+    let newShopAdmin;
+    return ShopAdmin.insert(adminObj)
+        .then(([shopAdmin]) => {
+            console.log('Admin de shop insertado: ' + shopAdmin.id);
+            newShopAdmin = shopAdmin;
+            shopJson.adminid = newShopAdmin.id;
+            return Shop.insert(shopJson);
+        }).then(([shop]) => {
+            const shopAdminToken = tokenManager.signToken({
+                shopId: shop.id,
+                shopName,
+            });
+            const tokenStr = shopAdminToken.token;
+            const emailData = {
+                to: adminEmail,
+                subject: 'Nuevo registro de comercio',
+                html: `<p>El comercio <strong>${shopName}</strong> fue dado de alta.<br/>
+                Usted ha sido registrado como el administrador.<br/>
+                Para completar con el registro de su comercio, ingrese 
+                <a href="${thisUrl}/shopreg?token=${tokenStr}">aqui</a>.<br/>
+                Su password es: ${adminPassword}</p>`
+            };
+            return emailSender.sendAdminEmail(emailData);
+        }).then(info => {
+            console.log(info);
+            responseUtils.sendMsgCodeResponse(res, 'Exito', 200);
+        }).catch(cause => {
+            console.error(cause);
         });
 };
 
