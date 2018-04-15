@@ -9,6 +9,10 @@ import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import Snackbar from 'material-ui/Snackbar';
 
+import { Link } from 'react-router-dom';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+
 import axios from 'axios';
 
 import Header from './Header';
@@ -222,6 +226,16 @@ const ShopList = React.createClass({
 
         return (
             <div >
+                <Link to="/shops/create" >
+                    <FloatingActionButton secondary={true} style={{
+                        position: 'fixed',
+                        zIndex: 1,
+                        bottom: '5%',
+                        right: '5%',
+                    }} >
+                        <ContentAdd />
+                    </FloatingActionButton>
+                </Link>
                 {mainElem}
                 <Snackbar
                     open={this.state.errSnackbarOpen}

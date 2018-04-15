@@ -26,7 +26,9 @@ router.post('/shopadm/logout', (req, res) => {
     res.redirect('/shopadm');
 });
 
-
+/**
+ * Url para finalizar el alta de un shop
+ */
 router.get('/shopreg', (req, res) => {
     //const tokenStr = req.params.token;
     const tokenStr = req.query.token;
