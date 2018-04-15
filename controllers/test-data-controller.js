@@ -67,6 +67,19 @@ function insertShops() {
     return Promise.all(pr);
 }
 
+function publishShops() {
+    return Shop.setInitdone({
+        id: 1,
+        initdone: 'TRUE'
+    }).then(b => {
+        console.log('Carga completa del shop 1');
+        return Shop.setValidone({
+            id: 1,
+            validone: 'TRUE'
+        });
+    });
+}
+
 function insertShopDetails() {
     const pr = [];
     for (let shopi = 1; shopi < 3; shopi++) {
@@ -112,6 +125,9 @@ exports.createTestData = function (req, res) {
         return insertShopDetails();
     }).then(b => {
         console.log('Shops details insertados');
+        return publishShops();
+    }).then(b => {
+        console.log('Shop 1 tiene carga completa y validado');
         res.send({ msg: "exito" });
     }).catch(cause => {
         console.error(cause);
