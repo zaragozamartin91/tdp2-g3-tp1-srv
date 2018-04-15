@@ -10,8 +10,7 @@ exports.createTable=function(){
         weekstart TIMESTAMP,
         weekfinish TIMESTAMP,
         weekendstart TIMESTAMP,
-        weekendfinish TIMESTAMP,
-        shopid int REFERENCES ${Shop.table}(id) ON DELETE CASCADE
+        weekendfinish TIMESTAMP
     )`, []);
 };
 
@@ -19,9 +18,9 @@ exports.deleteTable = function() {
     return dbManager.queryPromise('DROP TABLE ' + table, []);
 };
 
-exports.insert=function({weekstart, weekfinish, weekendstart, weekendfinish, shopid}){
+exports.insert=function({weekstart, weekfinish, weekendstart, weekendfinish}){
     return dbManager.queryPromise(`
-        INSERT INTO ${table}(weekstart, weekfinish, weekendstart, weekendfinish, shopid) 
-        VALUES($1,$2,$3,$4,$5) 
-        RETURNING *`, [weekstart, weekfinish, weekendstart, weekendfinish, shopid]);
+        INSERT INTO ${table}(weekstart, weekfinish, weekendstart, weekendfinish) 
+        VALUES($1,$2,$3,$4) 
+        RETURNING *`, [weekstart, weekfinish, weekendstart, weekendfinish]);
 };

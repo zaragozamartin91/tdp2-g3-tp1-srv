@@ -7,6 +7,7 @@ const Shop = require('../model/Shop');
 const District = require('../model/District');
 const ShopAdmin = require('../model/ShopAdmin');
 const ShopDetails = require('../model/ShopDetails');
+const ShopSchedule = require('../model/ShopSchedule');
 const FoodTypes = require('../model/FoodType');
 
 const generatePassword = require('password-generator');
@@ -18,6 +19,9 @@ function createTables() {
             return FoodTypes.createTable();
         }).then(e => {
             console.log('Tabla de foodtypes creada');
+            return ShopSchedule.createTable();
+        }).then(e => {
+            console.log('Tabla de horarios del shop creada');
             return ShopAdmin.createTable();
         }).then(e => {
             console.log('Tabla de administradores de shops creada');
@@ -74,6 +78,19 @@ function insertShopDetails() {
     return Promise.all(pr);
 }
 
+function insertShopSchedule() {
+    const pr = [];
+    for (let shopi = 1; shopi < 3; shopi++) {
+        pr.push(ShopSchedule.insert({
+            weekstart: new Date(),
+            weekfinish: new Date(),
+            weekendstart: new Date(),
+            weekendfinish: new Date() 
+        }));
+    }
+    return Promise.all(pr);
+}
+
 exports.createTestData = function (req, res) {
     createTables().then(b => {
         console.log('TABLAS CREADAS');
@@ -83,6 +100,9 @@ exports.createTestData = function (req, res) {
         return FoodTypes.insertDefaults();
     }).then(b => {
         console.log('FoodTypes insertados');
+        return insertShopSchedule();
+    }).then(b => {
+        console.log('Horarios insertados');
         return insertShopAdmins();
     }).then(b => {
         console.log('Admins insertados');
@@ -111,6 +131,9 @@ function deleteTables() {
         return FoodTypes.deleteTable();
     }).then(b => {
         console.log("Se elimino la tabla de FoodTypes");
+        return ShopSchedule.deleteTable();
+    }).then(b => {
+        console.log("Se elimino la tabla de horarios del Shop");
         return ShopAdmin.deleteTable();
     }).then(b => {
         console.log("Se elimino la tabla de shop admins");
