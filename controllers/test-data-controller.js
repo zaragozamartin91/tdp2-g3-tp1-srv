@@ -7,6 +7,7 @@ const Shop = require('../model/Shop');
 const District = require('../model/District');
 const ShopAdmin = require('../model/ShopAdmin');
 const ShopDetails = require('../model/ShopDetails');
+const FoodTypes = require('../model/FoodType');
 
 const generatePassword = require('password-generator');
 
@@ -14,6 +15,9 @@ function createTables() {
     return District.createTable()
         .then(e => {
             console.log('Tabla de distritos creada');
+            return FoodTypes.createTable();
+        }).then(e => {
+            console.log('Tabla de foodtypes creada');
             return ShopAdmin.createTable();
         }).then(e => {
             console.log('Tabla de administradores de shops creada');
@@ -63,7 +67,7 @@ function insertShopDetails() {
     const pr = [];
     for (let shopi = 1; shopi < 3; shopi++) {
         pr.push(ShopDetails.insert({
-            foodtype: 'italiana',
+            foodtypeid: shopi,
             shopid: shopi
         }));
     }
@@ -76,6 +80,9 @@ exports.createTestData = function (req, res) {
         return District.insertDefaults();
     }).then(b => {
         console.log('Distritos insertados');
+        return FoodTypes.insertDefaults();
+    }).then(b => {
+        console.log('FoodTypes insertados');
         return insertShopAdmins();
     }).then(b => {
         console.log('Admins insertados');
@@ -101,6 +108,9 @@ function deleteTables() {
         return District.deleteTable();
     }).then(b => {
         console.log("Se elimino la tabla de Distritos");
+        return FoodTypes.deleteTable();
+    }).then(b => {
+        console.log("Se elimino la tabla de FoodTypes");
         return ShopAdmin.deleteTable();
     }).then(b => {
         console.log("Se elimino la tabla de shop admins");
