@@ -43,7 +43,7 @@ exports.createShop = function (req, res) {
         name: adminName, email: adminEmail, password: adminPassword
     };
 
-    let newShopAdmin;
+    let newShopAdmin, newShop;
     return ShopAdmin.insert(adminObj)
         .then(([shopAdmin]) => {
             console.log('Admin de shop insertado: ' + shopAdmin.id);
@@ -51,9 +51,11 @@ exports.createShop = function (req, res) {
             shopJson.adminid = newShopAdmin.id;
             return Shop.insert(shopJson);
         }).then(([shop]) => {
+            console.log(`Shop insertado: ${JSON.stringify(shop)}`);
+            newShop = shop;
             const shopAdminToken = tokenManager.signToken({
                 shopId: shop.id,
-                shopName,
+                adminId: newShopAdmin.id,
             });
             const tokenStr = shopAdminToken.token;
             const emailData = {
@@ -68,7 +70,7 @@ exports.createShop = function (req, res) {
             return emailSender.sendAdminEmail(emailData);
         }).then(info => {
             console.log(info);
-            responseUtils.sendMsgCodeResponse(res, 'Exito', 200);
+            res.send({ shop: newShop });
         }).catch(cause => {
             console.error(cause);
         });

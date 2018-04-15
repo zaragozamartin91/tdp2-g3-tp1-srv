@@ -5,95 +5,189 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import { Card, CardActions, CardHeader, CardText } from 'material-ui/Card';
+import Checkbox from 'material-ui/Checkbox';
 import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
+import Snackbar from 'material-ui/Snackbar';
+
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+
+import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
 
 import axios from 'axios';
 
 import Header from './Header';
-//import mainConfig from '../config/main-config';
+
+/* ESTE FRAGMENTO DE CODIGO ES REQUERIDO PARA LOS EVENTOS DE TIPO TOUCH O CLICK EN COMPONENTES MATERIAL-UI */
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
 
 /* FIN DE IMPORTS -------------------------------------------------------------------------------------- */
+
+const token = document.querySelector('#token').innerHTML;
 
 const EMPTY_CALLBACK = () => { };
 
 const ShopReg = React.createClass({
     getInitialState: function () {
         return {
-            username: '',
-            password: '',
-            errMsg: null,
+            msgSnackbarOpen: false,
+            snackbarMessage: '',
+            myShop: {},
+            myShopReady: false
         };
     },
 
-    getDefaultProps: function () {
-        return { onSubmit: EMPTY_CALLBACK };
-    },
-
-    submitForm: function () {
-        const username = this.state.username;
-        const password = this.state.password;
-
-        //hago encoding base64 para pasar las credenciales
-        const encoded = btoa(username + ':' + password);
-
-        axios({
-            method: 'post', //you can set what request you want to be
-            url: '/api/v1/admin/login',
-            headers: { Authorization: 'Basic ' + encoded }
-        })
-            .then(contents => {
-                console.log('Contenido:');
-                console.log(contents.data);
-                this.props.onSubmit(contents.data.token);
-            })
-            .catch(cause => {
-                console.error('Error');
-                this.setState({ errMsg: 'Credenciales invalidas' });
+    componentDidMount() {
+        console.log('token: ' + token);
+        axios.get(`/api/v1/shopadm/myshop?token=${token}`)
+            .then(response => {
+                console.log(`response.data.shop: ${JSON.stringify(response.data.shop)}`);
+                this.setState({ myShop: response.data.shop, myShopReady: true });
+            }).catch(cause => {
+                console.error(cause);
+                this.openSnackbar('Error al cargar los datos del comercio');
             });
     },
 
-    handleKeyPress: function (event) {
-        if (event.key == 'Enter') this.submitForm();
+    openSnackbar(msg) {
+        console.log('Abriendo snack bar');
+        this.setState({ msgSnackbarOpen: true, snackbarMessage: msg });
+    },
+
+
+    validateShop() {
+
     },
 
     render: function () {
-        console.log('RENDERING SHOPREG');
-        let msgElem = this.state.errMsg ? <p style={{ color: 'red' }} >{this.state.errMsg}</p> : <div />;
 
         return (
-            <div onKeyPress={this.handleKeyPress}>
-                <Header title="Registro de comercio" />
-                {msgElem}
-                <MuiThemeProvider>
-                    <Card>
-                        <CardHeader
-                            title="Validar registro"
-                            subtitle='Ingrese credenciales' />;
 
-                        <CardText expandable={false}>
-                            <TextField
-                                name="username"
-                                hint="username"
-                                floatingLabelText="username"
-                                value={this.state.username}
-                                onChange={e => this.setState({ username: e.target.value })} /><br />
+            <MuiThemeProvider>
+                <div style={{ paddingBottom: 10, backgroundColor: 'rgba(255,255,255,0.7)' }}>
 
-                            <TextField
-                                name="password"
-                                hintText="Password"
-                                floatingLabelText="Password"
-                                type="password"
-                                value={this.state.password}
-                                onChange={e => this.setState({ password: e.target.value })} /><br />
-                        </CardText>
+                    <div style={{ margin: 20 }}>
+                        <h1>Validacion de alta de comercio</h1>
+                        <hr />
 
-                        <CardActions>
-                            <FlatButton label="Iniciar sesion" onClick={this.submitForm} />
-                        </CardActions>
-                    </Card>
+                        <h2>Datos basicos</h2>
 
-                </MuiThemeProvider >
-            </div>
+                        <TextField
+                            name="Nombre"
+                            hint="Nombre"
+                            floatingLabelText="Nombre"
+                            value={this.state.myShop.name}
+                            disabled={true} /><br />
+
+                        <TextField
+                            name="Direccion"
+                            hint="Direccion"
+                            floatingLabelText="Direccion"
+                            value={this.state.myShop.address}
+                            onChange={e => this.setState({ address: e.target.value })}
+                            disabled={true} /><br />
+
+                        <TextField
+                            name="Latitud"
+                            hint="Latitud"
+                            floatingLabelText="Latitud"
+                            value={this.state.myShop.lat}
+                            onChange={e => this.setState({ lat: e.target.value })}
+                            disabled={true}
+                            style={{ marginRight: 10 }} />
+
+                        <TextField
+                            name="Longitud"
+                            hint="Longitud"
+                            floatingLabelText="Longitud"
+                            value={this.state.myShop.long}
+                            onChange={e => this.setState({ long: e.target.value })}
+                            disabled={true} /><br />
+
+                        <TextField
+                            name="Telefono"
+                            hint="Telefono sin guion ni espacios"
+                            floatingLabelText="Telefono"
+                            value={this.state.myShop.phone}
+                            onChange={e => this.setState({ phone: e.target.value })}
+                            disabled={true} /><br />
+
+                        <hr />
+
+                        <h2>Datos del menu</h2>
+
+                        <TextField
+                            name="Tipo de comida"
+                            hint="Tipo de comida"
+                            floatingLabelText="Tipo de comida"
+                            value={this.state.adminEmail}
+                            onChange={e => this.setState({ adminEmail: e.target.value })} /><br />
+
+                        <h3>Horario de dia de semana</h3>
+
+                        <TimePicker
+                            format="24hr"
+                            hintText="Hora de apertura" />
+
+                        <TimePicker
+                            format="24hr"
+                            hintText="Hora de cierre" />
+
+                        <br />
+
+                        <h3>Horario de fines de semana</h3>
+
+                        <TimePicker
+                            format="24hr"
+                            hintText="Hora de apertura" />
+
+                        <TimePicker
+                            format="24hr"
+                            hintText="Hora de cierre" />
+
+                        <hr />
+
+                        <h2>Credenciales del administrador</h2>
+
+                        <TextField
+                            name="Email"
+                            hint="Email"
+                            floatingLabelText="Email"
+                            value={this.state.adminEmail}
+                            onChange={e => this.setState({ adminEmail: e.target.value })} /><br />
+
+                        <TextField
+                            name="Password"
+                            hint="Password"
+                            floatingLabelText="Password"
+                            value={this.state.adminPassword}
+                            onChange={e => this.setState({ adminPassword: e.target.value })}
+                            type='password' /><br />
+
+
+                        <RaisedButton
+                            style={{ marginTop: 20 }}
+                            label="Todo bien"
+                            onClick={this.validateShop}
+                            secondary={true}
+                            style={{ marginRight: 10 }}
+                            disabled={!this.state.myShopReady} />
+                        <RaisedButton style={{ marginTop: 20 }} label="Algo esta mal" disabled={!this.state.myShopReady} />
+
+                    </div>
+
+                    <Snackbar
+                        open={this.state.msgSnackbarOpen}
+                        message={this.state.snackbarMessage}
+                        autoHideDuration={3000}
+                        onRequestClose={this.handleSnackbarRequestClose} />
+                </div>
+
+            </MuiThemeProvider >
         );
     }
 });

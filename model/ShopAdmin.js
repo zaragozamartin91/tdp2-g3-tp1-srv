@@ -8,7 +8,8 @@ exports.createTable=function(){
         id SERIAL PRIMARY KEY,
         name VARCHAR(64) NOT NULL,
         email VARCHAR(64) NOT NULL,
-        password VARCHAR(32)
+        password VARCHAR(32),
+        enabled BOOLEAN DEFAULT FALSE
     )`, []);
 };
 
