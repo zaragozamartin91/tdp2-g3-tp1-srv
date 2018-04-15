@@ -3,7 +3,7 @@ const dbManager = require('./db-manager');
 const table = 'shop_admins';
 exports.table = table;
 
-exports.createTable=function(){
+exports.createTable = function () {
     return dbManager.queryPromise(`CREATE TABLE ${table} (
         id SERIAL PRIMARY KEY,
         name VARCHAR(64) NOT NULL,
@@ -13,13 +13,19 @@ exports.createTable=function(){
     )`, []);
 };
 
-exports.deleteTable = function() {
+exports.deleteTable = function () {
     return dbManager.queryPromise('DROP TABLE ' + table, []);
 };
 
-exports.insert=function({name, email, password}){
+exports.insert = function ({ name, email, password }) {
     return dbManager.queryPromise(`
         INSERT INTO ${table}(name, email, password) 
         VALUES($1,$2,$3) 
         RETURNING *`, [name, email, password]);
+};
+
+exports.enable = function ({ id }) {
+    return dbManager.queryPromise(`
+        UPDATE ${table} SET enabled=TRUE WHERE id=$1 RETURNING *
+    `, [id]);
 };

@@ -73,7 +73,9 @@ const ShopReg = React.createClass({
 
     validateShop() {
         const foodtype = this.state.foodtypes.find(ft => ft.id == this.state.foodtype);
-
+        axios.post(`/api/v1/shopadm/verify?token=${token}`).then(response => {
+            this.openSnackbar('exito');
+        }).catch(cause => console.error(cause));
     },
 
     render: function () {
