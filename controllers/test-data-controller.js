@@ -67,7 +67,7 @@ function insertShopDetails() {
     const pr = [];
     for (let shopi = 1; shopi < 3; shopi++) {
         pr.push(ShopDetails.insert({
-            foodtype: 'italiana',
+            foodtypeid: shopi,
             shopid: shopi
         }));
     }

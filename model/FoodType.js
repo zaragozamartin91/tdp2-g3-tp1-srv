@@ -24,7 +24,6 @@ function insert(foodtype){
 exports.insertDefaults = function () {
     const contents = fs.readFileSync('jsons/foodtypes.json');
     const jsonContent = JSON.parse(contents);
-    console.log(jsonContent);
     const promises = [];
     jsonContent.forEach(foodtype => promises.push(insert(foodtype)));
     return Promise.all(promises);
