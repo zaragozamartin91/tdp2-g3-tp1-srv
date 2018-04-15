@@ -27,3 +27,7 @@ exports.insert=function({foodtype, shop}){
 exports.findById = function (shopid) {
     return dbManager.queryPromise(`SELECT * FROM ${table} WHERE shopid=$1`, [shopid]);
 };
+
+exports.find = function () {
+    return dbManager.queryPromise(`SELECT * FROM ${table} `, []);
+};

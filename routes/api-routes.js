@@ -25,6 +25,7 @@ router.put('/shops/:shopId', tokenValidator.verifyToken, tokenValidator.verifyAd
 router.get('/shops/:shopId/menu', shopController.getShopMenu);
 
 router.get('/shops/enabled', shopController.getShopsEnabled);
+router.get('/shops/published', shopController.getShopsPublished);
 //router.delete('/shops/:shopId', shopController.deleteShop);
 
 /* Endpoints para los tipos de comidas*/
