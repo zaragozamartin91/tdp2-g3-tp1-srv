@@ -15,7 +15,7 @@ exports.deleteTable = function() {
     return dbManager.queryPromise('DROP TABLE ' + table, []);
 };
 
-//No la exporto porque nadie deberia poder insertar nuevos valores por el momento
+//No la exporto porque nadie deberia poder insertar nuevos valores por el momento 
 function insert(foodtype){
     return dbManager.queryPromise(`
         INSERT INTO ${table}(foodtype) VALUES($1) RETURNING *`, [foodtype]);
