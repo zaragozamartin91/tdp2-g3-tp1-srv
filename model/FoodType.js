@@ -16,15 +16,15 @@ exports.deleteTable = function() {
 };
 
 //No la exporto porque nadie deberia poder insertar nuevos valores por el momento
-function insert({foodtype}){
+function insert(foodtype){
     return dbManager.queryPromise(`
-    INSERT INTO ${table}(foodtype) 
-    VALUES($1) RETURNING *`, [foodtype]);
+        INSERT INTO ${table}(foodtype) VALUES($1) RETURNING *`, [foodtype]);
 }
 
 exports.insertDefaults = function () {
     const contents = fs.readFileSync('jsons/foodtypes.json');
     const jsonContent = JSON.parse(contents);
+    console.log(jsonContent);
     const promises = [];
     jsonContent.forEach(foodtype => promises.push(insert(foodtype)));
     return Promise.all(promises);
