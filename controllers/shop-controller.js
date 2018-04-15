@@ -29,6 +29,17 @@ exports.getShopsEnabled = function (req, res) {
         });
 };
 
+exports.getShopsPublished = function (req, res) {
+    return Shop.findPublished()
+        .then((shops) => {
+            res.send({ shops });
+        })
+        .catch(cause => {
+            console.error("Hubo un problema al obtener los Shops publicados, " + cause);
+            responseUtils.sendMsgCodeResponse(res, "Hubo un problema al obtener los Shops publicados, " + cause, 500);
+        });
+};
+
 
 let thisUrl = process.env.URL || 'http://localhost:5000';
 
