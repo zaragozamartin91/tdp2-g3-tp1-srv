@@ -126,7 +126,7 @@ function getFinalShops (shops) {
     return ShopDetails.find().then(details => {
         const finalShops = [];
         shops.forEach(s => {
-            const detail = details.find(d => d.shop = s.id);
+            const detail = details.find(d => d.shop == s.id);
             s.details = detail;
             finalShops.push(s);
         });
