@@ -9,6 +9,7 @@ const ShopAdmin = require('../model/ShopAdmin');
 const ShopDetails = require('../model/ShopDetails');
 const ShopSchedule = require('../model/ShopSchedule');
 const FoodTypes = require('../model/FoodType');
+const Client = require('../model/Client');
 
 const generatePassword = require('password-generator');
 
@@ -31,6 +32,9 @@ function createTables() {
             return ShopDetails.createTable();
         }).then(e => {
             console.log('Tabla de shops details creada');
+            return Client.createTable();
+        }).then(e => {
+            console.log('Tabla de clientes creada');
             return true;
         }).catch(cause => {
             console.error(cause);
@@ -104,6 +108,19 @@ function insertShopSchedule() {
     return Promise.all(pr);
 }
 
+function insertClients() {
+    const pr = [];
+    for (let client = 1; client < 3; client++) {
+        pr.push(Client.insert({
+            id: "" + client,
+            email: client + "@mail.com",
+            address: "Rio bamba 123",
+            zone: "Recoleta"
+        }));
+    }
+    return Promise.all(pr);
+}
+
 exports.createTestData = function (req, res) {
     createTables().then(b => {
         console.log('TABLAS CREADAS');
@@ -128,6 +145,9 @@ exports.createTestData = function (req, res) {
         return publishShops();
     }).then(b => {
         console.log('Shop 1 tiene carga completa y validado');
+        return insertClients();
+    }).then(b => {
+        console.log('Clients insertados');
         res.send({ msg: "exito" });
     }).catch(cause => {
         console.error(cause);
@@ -153,6 +173,9 @@ function deleteTables() {
         return ShopAdmin.deleteTable();
     }).then(b => {
         console.log("Se elimino la tabla de shop admins");
+        return Client.deleteTable();
+    }).then(e => {
+        console.log('Tabla de clientes creada');
         return true;
     }).catch(cause => {
         console.error(cause);
