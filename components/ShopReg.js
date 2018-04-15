@@ -37,17 +37,29 @@ const ShopReg = React.createClass({
             msgSnackbarOpen: false,
             snackbarMessage: '',
             myShop: {},
-            myShopReady: false
+            myShopReady: false,
+            weekstart: new Date(),
+            weekfinish: new Date(),
+            weekendstart: new Date(),
+            weekendfinish: new Date(),
+            foodtypes: null, // tipos de comida disponibles
+            foodtype: 0 // id de tipo de comida
         };
     },
 
     componentDidMount() {
         console.log('token: ' + token);
+        let myShop;
         axios.get(`/api/v1/shopadm/myshop?token=${token}`)
             .then(response => {
                 console.log(`response.data.shop: ${JSON.stringify(response.data.shop)}`);
-                this.setState({ myShop: response.data.shop, myShopReady: true });
-            }).catch(cause => {
+                myShop = response.data.shop;
+                return axios.get('/api/v1/foodtypes');
+            }).then(response => {
+                console.log(`response.data.foodTypes: ${JSON.stringify(response.data.foodTypes)}`);
+                this.setState({ myShop, myShopReady: true, foodtypes: response.data.foodTypes });
+            })
+            .catch(cause => {
                 console.error(cause);
                 this.openSnackbar('Error al cargar los datos del comercio');
             });
@@ -60,13 +72,18 @@ const ShopReg = React.createClass({
 
 
     validateShop() {
+        const foodtype = this.state.foodtypes.find(ft => ft.id == this.state.foodtype);
 
     },
 
     render: function () {
+        if (!this.state.foodtypes) return <span>Espere...</span>;
+
+        const foodtypeItems = [<MenuItem value={0} primaryText='Tipo de comida' />];
+        this.state.foodtypes.forEach(ft =>
+            foodtypeItems.push(<MenuItem value={ft.id} primaryText={ft.foodtype} />));
 
         return (
-
             <MuiThemeProvider>
                 <div style={{ paddingBottom: 10, backgroundColor: 'rgba(255,255,255,0.7)' }}>
 
@@ -88,7 +105,6 @@ const ShopReg = React.createClass({
                             hint="Direccion"
                             floatingLabelText="Direccion"
                             value={this.state.myShop.address}
-                            onChange={e => this.setState({ address: e.target.value })}
                             disabled={true} /><br />
 
                         <TextField
@@ -96,7 +112,6 @@ const ShopReg = React.createClass({
                             hint="Latitud"
                             floatingLabelText="Latitud"
                             value={this.state.myShop.lat}
-                            onChange={e => this.setState({ lat: e.target.value })}
                             disabled={true}
                             style={{ marginRight: 10 }} />
 
@@ -105,7 +120,6 @@ const ShopReg = React.createClass({
                             hint="Longitud"
                             floatingLabelText="Longitud"
                             value={this.state.myShop.long}
-                            onChange={e => this.setState({ long: e.target.value })}
                             disabled={true} /><br />
 
                         <TextField
@@ -113,29 +127,33 @@ const ShopReg = React.createClass({
                             hint="Telefono sin guion ni espacios"
                             floatingLabelText="Telefono"
                             value={this.state.myShop.phone}
-                            onChange={e => this.setState({ phone: e.target.value })}
                             disabled={true} /><br />
 
                         <hr />
 
                         <h2>Datos del menu</h2>
 
-                        <TextField
-                            name="Tipo de comida"
-                            hint="Tipo de comida"
-                            floatingLabelText="Tipo de comida"
-                            value={this.state.adminEmail}
-                            onChange={e => this.setState({ adminEmail: e.target.value })} /><br />
+                        <DropDownMenu
+                            value={this.state.foodtype}
+                            onChange={(e, i, value) => this.setState({ foodtype: value })}
+                            openImmediately={false}
+                            style={{ width: 200, padding: 0 }}>
+                            {foodtypeItems}
+                        </DropDownMenu> <br />
 
                         <h3>Horario de dia de semana</h3>
 
                         <TimePicker
                             format="24hr"
-                            hintText="Hora de apertura" />
+                            hintText="Hora de apertura"
+                            onChange={(e, d) => this.setState({ weekstart: d })}
+                            autoOk={true} />
 
                         <TimePicker
                             format="24hr"
-                            hintText="Hora de cierre" />
+                            hintText="Hora de cierre"
+                            onChange={(e, d) => this.setState({ weekfinish: d })}
+                            autoOk={true} />
 
                         <br />
 
@@ -143,11 +161,15 @@ const ShopReg = React.createClass({
 
                         <TimePicker
                             format="24hr"
-                            hintText="Hora de apertura" />
+                            hintText="Hora de apertura"
+                            onChange={(e, d) => this.setState({ weekendstart: d })}
+                            autoOk={true} />
 
                         <TimePicker
                             format="24hr"
-                            hintText="Hora de cierre" />
+                            hintText="Hora de cierre"
+                            onChange={(e, d) => this.setState({ weekendfinish: d })}
+                            autoOk={true} />
 
                         <hr />
 
@@ -176,7 +198,10 @@ const ShopReg = React.createClass({
                             secondary={true}
                             style={{ marginRight: 10 }}
                             disabled={!this.state.myShopReady} />
-                        <RaisedButton style={{ marginTop: 20 }} label="Algo esta mal" disabled={!this.state.myShopReady} />
+                        <RaisedButton
+                            style={{ marginTop: 20 }}
+                            label="Algo esta mal"
+                            disabled={!this.state.myShopReady} />
 
                     </div>
 
