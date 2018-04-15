@@ -33,9 +33,9 @@ router.get('/shopreg', (req, res) => {
     tokenManager.verifyToken(tokenStr, (err, decoded) => {
         if(err) res.render('error',{message: 'Token invalido' , error:err});
 
-        const { shopId, shopName } = decoded;
+        const { shopId, adminId } = decoded;
         //res.redirect('/shopreg');
-        res.render('shopreg', { title: 'Registrar comercio', shopId, shopName });
+        res.render('shopreg', { title: 'Registrar comercio', token: tokenStr });
     });
 });
 

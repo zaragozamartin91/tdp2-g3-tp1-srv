@@ -38,3 +38,7 @@ exports.verifyAdminToken = function (req, res, next) {
     if (mainConf.adminId == adminId) return next();
     else return sendMsgCodeResponse(res, 'No autorizado', 401);
 };
+
+// exports.verifyShopadminToken = function (req, res, next) {
+
+// };

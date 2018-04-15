@@ -17,7 +17,7 @@ router.get('/districts', adminController.getDistricts);
 //TODO : AGREGAR SEGURIDAD A NIVEL TOKEN
 
 /* Endpoints para obtener y dar de alta shops. Solo accessibles para el administrador */
-router.get('/shops', tokenValidator.verifyToken, tokenValidator.verifyAdminToken, shopController.getShops);
+router.get('/shops', shopController.getShops);
 router.post('/shops', tokenValidator.verifyToken, tokenValidator.verifyAdminToken, shopController.createShop);
 router.put('/shops/:shopId', tokenValidator.verifyToken, tokenValidator.verifyAdminToken, shopController.updateShop);
 
@@ -33,5 +33,24 @@ router.get('/shopadm/myshop', tokenValidator.verifyToken, shopadmController.getM
 /* CREA LOS DATOS DE PRUEBA DE LA APP */
 router.post('/test-data', testDataController.createTestData);
 router.delete('/test-data', testDataController.deleteTestData);
+
+
+
+/* MIDLEWARE TEST ------------------------------------------------------------------------- */
+function middle1(req,res,next){
+    console.log('middle 1');
+    return next(new Error('error de prueba'));
+}
+function middle2(err,req,res,next){
+    console.log('middle 2');
+    return next(err);
+}
+function middleErr(err, req, res, next) {
+    console.log('middle err');
+    console.error(err);
+    res.status(500).send('Something broke!');
+}
+router.get('/middleware', middle1 , middle2 , middleErr );
+
 
 module.exports = router;

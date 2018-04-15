@@ -46,8 +46,10 @@ function signShop({ id, name }) {
 }
 
 exports.getMyShop = function (req, res) {
-    const { id = 0, name } = req.decodedToken;
-    Shop.findById(id).then(([shop]) => {
+    const { id = 0, name, shopId = id } = req.decodedToken;
+    console.log('Obteniendo my shop: ' + shopId);
+
+    Shop.findById(shopId).then(([shop]) => {
         if (shop) return res.send({ shop });
         else return Promise.reject({ code: 460, message: 'El shop no existe' });
     }).catch(cause => {
