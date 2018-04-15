@@ -8,6 +8,7 @@ const testDataController = require('../controllers/test-data-controller');
 const adminController = require('../controllers/admin-controller');
 const shopController = require('../controllers/shop-controller');
 const shopadmController = require('../controllers/shopadm-controller');
+const foodTypeController = require('../controllers/foodtype-controller');
 
 const router = express.Router();
 
@@ -25,6 +26,9 @@ router.get('/shops/:shopId/menu', shopController.getShopMenu);
 
 router.get('/shops/enabled', shopController.getShopsEnabled);
 //router.delete('/shops/:shopId', shopController.deleteShop);
+
+/* Endpoints para los tipos de comidas*/
+router.get('/foodtypes', foodTypeController.getFoodTypes);
 
 /* Login para el backoffice de comercios */
 router.post('/shopadm/login', shopadmController.login);

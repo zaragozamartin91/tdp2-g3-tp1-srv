@@ -23,3 +23,7 @@ exports.insert=function({foodtypeid, shopid}){
     INSERT INTO ${table}(foodtypeid, shopid) 
     VALUES($1,$2) RETURNING *`, [foodtypeid, shopid]);
 };
+
+exports.findById = function (shopid) {
+    return dbManager.queryPromise(`SELECT * FROM ${table} WHERE shopid=$1`, [shopid]);
+};
