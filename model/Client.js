@@ -7,6 +7,7 @@ exports.table = table;
 exports.createTable=function(){
     return dbManager.queryPromise(`CREATE TABLE ${table} (
         id VARCHAR(64) PRIMARY KEY,
+        email VARCHAR(64) NOT NULL,
         enabled BOOLEAN DEFAULT TRUE,
         address VARCHAR(64) NOT NULL,
         zone VARCHAR(64) NOT NULL
@@ -17,11 +18,10 @@ exports.deleteTable = function() {
     return dbManager.queryPromise('DROP TABLE ' + table, []);
 };
 
-//No la exporto porque nadie deberia poder insertar nuevos valores por el momento 
-function insert(id, address, zone){
+exports.insert = function({id, email, address, zone}){
     return dbManager.queryPromise(`
-        INSERT INTO ${table}(id, address, zone) VALUES($1, $2, $3) RETURNING *`, [id, address, zone]);
-}
+        INSERT INTO ${table}(id, email, address, zone) VALUES($1, $2, $3, $4) RETURNING *`, [id, email, address, zone]);
+};
 
 exports.find = function () {
     return dbManager.queryPromise(`SELECT * FROM ${table}`, []);
