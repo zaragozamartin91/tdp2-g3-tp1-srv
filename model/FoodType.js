@@ -36,3 +36,7 @@ exports.find = function () {
 exports.findByName = function (name) {
     return dbManager.queryPromise(`SELECT * FROM ${table} WHERE foodtype=$1`, [name]);
 };
+
+exports.findById = function (id) {
+    return dbManager.queryPromise(`SELECT * FROM ${table} WHERE id=$1`, [id]);
+};
