@@ -5,16 +5,18 @@ const table = 'shops';
 const idType = 'SERIAL';
 
 
-function Shop(id, name, address, phone, zone, enabled, lat, long, adminid) {
+function Shop(id, name, address, phone, zone, enabled, lat, long, initdone, validone, adminid) {
     this.id = id;
     this.name = name;
     this.address = address;
-    this.phone = phone
+    this.phone = phone;
     this.zone = zone;
     this.enabled = enabled;
     this.lat = lat;
     this.long = long;
     this.adminid = adminid;
+    this.initdone = initdone;
+    this.validone = validone;
 }
 
 Shop.createTable = function () {
@@ -24,18 +26,20 @@ Shop.createTable = function () {
         address VARCHAR(64) NOT NULL,
         phone VARCHAR(32) NOT NULL,
         zone VARCHAR(64) NOT NULL,
-        enabled BOOLEAN DEFAULT FALSE,
+        enabled BOOLEAN DEFAULT TRUE,
         lat VARCHAR(64) NOT NULL,
         long VARCHAR(64) NOT NULL,
+        initdone BOOLEAN DEFAULT FALSE,
+        validone BOOLEAN DEFAULT FALSE,
         adminid int REFERENCES ${ShopAdmin.table}(id) ON DELETE CASCADE
     )`;
     return dbManager.queryPromise(sql, []);
-}
+};
 
 Shop.deleteTable = function () {
     const sql = `DROP TABLE  ${table}`;
     return dbManager.queryPromise(sql, []);
-}
+};
 
 Shop.insert = function (json) {
     const { name, address, phone, zone, lat, long, adminid } = json;
@@ -43,7 +47,7 @@ Shop.insert = function (json) {
     const sql = `INSERT INTO ${table}(name, address, phone, zone, lat, long, adminid) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
     const values = [name, address, phone, zone, lat, long, adminid];
     return dbManager.queryPromise(sql, values, fromRows);
-}
+};
 
 Shop.update = function (json) {
     const { id, name, address, phone, zone, lat, long, adminid } = json;
@@ -59,6 +63,20 @@ Shop.setEnabled = function (json) {
     return dbManager.queryPromise(sql, values, fromRows);
 };
 
+Shop.setInitdone = function (json) {
+    const { id, initdone } = json;
+    const sql = `UPDATE ${table} SET initdone=$1 WHERE id=$2 RETURNING *`;
+    const values = [initdone, id];
+    return dbManager.queryPromise(sql, values, fromRows);
+};
+
+Shop.setValidone = function (json) {
+    const { id, validone } = json;
+    const sql = `UPDATE ${table} SET validone=$1 WHERE id=$2 RETURNING *`;
+    const values = [validone, id];
+    return dbManager.queryPromise(sql, values, fromRows);
+};
+
 Shop.deleteById = function (shop) {
     const id = shop.id || shop;
     const sql = `DELETE FROM ${table} WHERE id=$1 RETURNING *`;
@@ -70,8 +88,8 @@ Shop.deleteById = function (shop) {
  * @param {object} json Objeto a partir del cual crear el shop 
  */
 function fromJson(json) {
-    const { id, name, address, phone, zone, enabled = true, lat, long, adminid } = json;
-    return new Shop(id, name, address, phone, zone, enabled, lat, long, adminid);
+    const { id, name, address, phone, zone, enabled = true, lat, long, initdone, validone, adminid } = json;
+    return new Shop(id, name, address, phone, zone, enabled, lat, long, initdone, validone, adminid);
 }
 
 function fromRows(rows) {
@@ -100,6 +118,12 @@ Shop.findEnabled = function () {
     return dbManager.queryPromise(sql, [], fromRows);
 };
 
+/* Vamos a devolver solo los shops que tienen la carga inicial completa, esta aprobado y esta habilitado */
+Shop.findPublished = function () {
+    const sql = `SELECT * FROM ${table} WHERE enabled = TRUE AND initdone = TRUE AND initdone = TRUE`;
+    return dbManager.queryPromise(sql, [], fromRows);
+};
+
 // EJEMPLO de llamada a findById
 //Shop.findById(123)
 //    .then(shops => {
@@ -109,7 +133,7 @@ Shop.findEnabled = function () {
 //        // hacer cosas con el error
 //    })
 
-Shop.table = table
+Shop.table = table;
 
 //esto indica que TODA la clase Shop sera exportada
 module.exports = Shop; 
