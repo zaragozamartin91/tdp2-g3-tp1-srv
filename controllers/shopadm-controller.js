@@ -3,6 +3,7 @@ const tokenManager = require('../utils/token-manager');
 const mainConf = require('../config/main-config');
 const responseUtils = require('../utils/response-utils');
 const Shop = require('../model/Shop');
+const ShopAdmin = require('../model/ShopAdmin');
 
 
 exports.login = function (req, res) {
@@ -57,5 +58,20 @@ exports.getMyShop = function (req, res) {
         console.error(cause);
         res.status(code || 500);
         res.send(cause);
+    });
+};
+
+/**
+ * Verifica el alta de un shop por parte del administrador del mismo
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.verifyShop = function (req, res) {
+    const { shopId, adminId } = req.decodedToken;
+    ShopAdmin.enable({ id: adminId }).then(shopAdmin => {
+        responseUtils.sendMsgCodeResponse(res, 'exito', 200);
+    }).catch(cause => {
+        console.error(cause);
+        responseUtils.sendMsgCodeResponse(res, cause.message, 500);
     });
 };

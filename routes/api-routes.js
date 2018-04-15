@@ -34,28 +34,11 @@ router.get('/foodtypes', foodTypeController.getFoodTypes);
 /* Login para el backoffice de comercios */
 router.post('/shopadm/login', shopadmController.login);
 router.get('/shopadm/myshop', tokenValidator.verifyToken, shopadmController.getMyShop);
+router.post('/shopadm/verify', tokenValidator.verifyToken, shopadmController.verifyShop);
 
 /* CREA LOS DATOS DE PRUEBA DE LA APP */
 router.post('/test-data', testDataController.createTestData);
 router.delete('/test-data', testDataController.deleteTestData);
-
-
-
-/* MIDLEWARE TEST ------------------------------------------------------------------------- */
-function middle1(req,res,next){
-    console.log('middle 1');
-    return next(new Error('error de prueba'));
-}
-function middle2(err,req,res,next){
-    console.log('middle 2');
-    return next(err);
-}
-function middleErr(err, req, res, next) {
-    console.log('middle err');
-    console.error(err);
-    res.status(500).send('Something broke!');
-}
-router.get('/middleware', middle1 , middle2 , middleErr );
 
 
 module.exports = router;
