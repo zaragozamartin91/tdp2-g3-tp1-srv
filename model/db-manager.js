@@ -73,12 +73,12 @@ function query(sql, values, callback) {
  * @return {Promise} Promesa de ejecucion de query.
  */
 /* istanbul ignore next */
-function queryPromise(sql, values , mapf) {
+function queryPromise(sql, values = [], mapf = null) {
     return new Promise((resolve, reject) => {
         query(sql, values, (err, { rows }) => {
             if (err) reject(err);
             else {
-                if(mapf) resolve(mapf(rows));
+                if (mapf) resolve(mapf(rows));
                 else resolve(rows);
             }
         });

@@ -61,12 +61,14 @@ const AdminBackofficeBar = React.createClass({
                 <Drawer open={this.state.drawerOpen} docked={false} onRequestChange={open => this.setState({ drawerOpen: open })} >
                     <Link to="/index" onClick={this.closeDrawer}><MenuItem >Principal</MenuItem></Link>
 
-                    <MenuItem primaryText='Comercios'
+                    {/* <MenuItem primaryText='Comercios'
                         rightIcon={<ArrowDropRight />}
                         menuItems={[
                             <Link to="/shops/create" onClick={this.closeDrawer}><MenuItem >Crear</MenuItem></Link>,
                             <Link to="/shops/list" onClick={this.closeDrawer}><MenuItem >Ver</MenuItem></Link>
-                        ]} />
+                        ]} /> */}
+
+                    <Link to="/shops/list" onClick={this.closeDrawer}><MenuItem >Comercios</MenuItem></Link>
                 </Drawer>
             </div >
         );
