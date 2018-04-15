@@ -1,5 +1,6 @@
 const Shop = require('../model/Shop');
 const ShopAdmin = require('../model/ShopAdmin');
+const ShopDetails = require('../model/ShopDetails');
 
 const generatePassword = require('password-generator');
 
@@ -10,7 +11,9 @@ const tokenManager = require('../utils/token-manager');
 exports.getShops = function (req, res) {
     return Shop.find()
         .then((shops) => {
-            res.send({ shops });
+            return getFinalShops(shops);
+        }).then((finalshops) => {
+            res.send({ shops: finalshops });
         })
         .catch(cause => {
             console.error("Hubo un problema al obtener los Shops, " + cause);
@@ -21,7 +24,9 @@ exports.getShops = function (req, res) {
 exports.getShopsEnabled = function (req, res) {
     return Shop.findEnabled()
         .then((shops) => {
-            res.send({ shops });
+            return getFinalShops(shops);
+        }).then((finalshops) => {
+            res.send({ shops: finalshops });
         })
         .catch(cause => {
             console.error("Hubo un problema al obtener los Shops habilitados, " + cause);
@@ -32,7 +37,9 @@ exports.getShopsEnabled = function (req, res) {
 exports.getShopsPublished = function (req, res) {
     return Shop.findPublished()
         .then((shops) => {
-            res.send({ shops });
+            return getFinalShops(shops);
+        }).then((finalshops) => {
+            res.send({ shops: finalshops });
         })
         .catch(cause => {
             console.error("Hubo un problema al obtener los Shops publicados, " + cause);
@@ -114,3 +121,17 @@ exports.getShopMenu = function (req, res) {
     }
     res.send({ menu: menuStub });
 };
+
+function getFinalShops (shops) {
+    return ShopDetails.find().then(details => {
+        const finalShops = [];
+        shops.forEach(s => {
+            const detail = details.find(d => d.shop = s.id);
+            s.details = detail;
+            finalShops.push(s);
+        });
+
+        return finalShops;
+        //res.send({ shops: finalShops });
+    });
+}
