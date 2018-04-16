@@ -33,7 +33,8 @@ router.get('/shops/published', shopController.getShopsPublished);
 router.get('/foodtypes', foodTypeController.getFoodTypes);
 
 /* Endpoints para manejar los clientes */
-router.get('/client/:clientId', clientController.getClient);
+router.get('/user/:clientId', clientController.getClient);
+router.post('/user', clientController.postClient);
 
 /* Login para el backoffice de comercios */
 router.post('/shopadm/login', shopadmController.login);
