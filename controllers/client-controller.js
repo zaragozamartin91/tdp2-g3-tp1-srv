@@ -18,7 +18,7 @@ exports.getClient = function (req, res) {
 };
 
 exports.postClient = function (req, res) {
-    return Client.insert(req)
+    return Client.insert(req.body)
         .then(([client]) => {
             res.send({ client });
         })
