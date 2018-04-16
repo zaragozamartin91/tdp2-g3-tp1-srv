@@ -202,6 +202,10 @@ const ShopList = React.createClass({
         const shopCards = this.state.shops.map(shop => {
             const backColors = ['#1A9386', 'rgb(21, 114, 105)', '#134E48'];
             let colIdx = 0;
+            const { initdone, validone } = shop;
+            let statusStr = 'Registro pendiente';
+            if (initdone) statusStr = 'Validacion pendiente';
+            if (validone) statusStr = 'Publicado';
 
             return (<Card style={{ backgroundColor: "rgba(255,255,255,0.8)", margin: 10 }} >
                 <CardHeader
@@ -213,6 +217,7 @@ const ShopList = React.createClass({
                     <p><strong>Direccion</strong>: {shop.address} </p>
                     <p><strong>Barrio</strong>: {shop.zone} </p>
                     <p><strong>Telefono</strong>: {shop.phone} </p>
+                    <p><strong>Estado</strong>: {statusStr}</p>
                 </CardText>
                 <CardActions>
                     <FlatButton label="Prohibir" secondary={true} disabled={!shop.enabled} onClick={this.openBanDialog(shop)} />
